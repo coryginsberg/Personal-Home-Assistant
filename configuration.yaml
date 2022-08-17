@@ -1,0 +1,87 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+#
+# Add to server by running the following script:
+# `scp {path/to/configuration.yaml} root@192.168.1.238:/config`
+
+default_config:
+
+http:
+  server_port: 8443 # Only 443, 2053, 2083, 2087, 2096, and 8443 are allowed through Cloudflare
+  ssl_certificate: origin.pem
+  ssl_key: privkey.pem
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+pyscript:
+  allow_all_imports: true
+  hass_is_global: true
+
+api:
+
+automation: !include automations.yaml
+scene: !include scenes.yaml
+
+homeassistant:
+  customize: !include customize.yaml
+
+# Bundle up all the data to send over to Weatherman.
+template:
+  - trigger:
+      platform: state
+      entity_id:
+        - sensor.scale_cory_ginsberg_weight
+    sensor:
+      - name: scale_last_record_date
+        state: >
+          {% set timestamp = state_attr('sensor.scale_cory_ginsberg_weight', 'entryTimestamp') %}
+          {% set currentTime = now() %}
+          {% set daysSince = currentTime - timestamp %}
+          {% if daysSince.days == 0 %}
+            Today 
+          {% elif daysSince.days == 1 %}
+            Yesterday
+          {% else %}
+            {{daysSince.days}} days ago
+          {% endif %}
+
+  - trigger:
+      platform: state
+      entity_id:
+        - weather.accuweather
+    sensor:
+      - name: Weather Data
+        state: >
+          {{ states('weather.accuweather') }}
+        attributes:
+          weather_temperature_now: >
+            {{ state_attr('weather.accuweather', 'temperature') | round }}
+
+          weather_condition_0: >
+            {{ state_attr('weather.accuweather', 'forecast')[0].condition }}
+          weather_temperature_0: >
+            {{ state_attr('weather.accuweather', 'forecast')[0].temperature | round }}
+          weather_timestamp_0: >
+            {{ as_timestamp(state_attr('weather.accuweather', 'forecast')[0].datetime) | timestamp_custom('%a') }}
+
+          weather_condition_1: >
+            {{ state_attr('weather.accuweather', 'forecast')[1].condition }}
+          weather_temperature_1: >
+            {{ state_attr('weather.accuweather', 'forecast')[1].temperature | round }}
+          weather_timestamp_1: >
+            {{ as_timestamp(state_attr('weather.accuweather', 'forecast')[1].datetime) | timestamp_custom('%a') }}
+
+          weather_condition_2: >
+            {{ state_attr('weather.accuweather', 'forecast')[2].condition }}
+          weather_temperature_2: >
+            {{ state_attr('weather.accuweather', 'forecast')[2].temperature | round }}
+          weather_timestamp_2: >
+            {{ as_timestamp(state_attr('weather.accuweather', 'forecast')[2].datetime) | timestamp_custom('%a') }}
+
+          weather_condition_3: >
+            {{ state_attr('weather.accuweather', 'forecast')[3].condition }}
+          weather_temperature_3: >
+            {{ state_attr('weather.accuweather', 'forecast')[3].temperature | round }}
+          weather_timestamp_3: >
+            {{ as_timestamp(state_attr('weather.accuweather', 'forecast')[3].datetime) | timestamp_custom('%a') }}

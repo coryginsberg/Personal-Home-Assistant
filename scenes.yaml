@@ -1,0 +1,643 @@
+- id: "1647922433245"
+  name: Turn Off Bedroom Lights
+  entities:
+    light.bed_frame:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Record Shelf
+      supported_features: 36
+      state: "off"
+    light.hue_color_lamp_1:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead light 2
+      supported_features: 40
+      state: "off"
+    light.lifx_z_706098:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Bed Frame
+      supported_features: 36
+      state: "off"
+    light.lifx_d0_73_d5_43_b3_9d:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Desk
+      supported_features: 36
+      state: "off"
+    light.overhead_light_1:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+        - None
+        - candle
+        - fire
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead Light 1
+      supported_features: 44
+      state: "off"
+    light.overhead_light_3:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead Light 3
+      supported_features: 40
+      state: "off"
+    light.closet_light:
+      supported_color_modes:
+        - brightness
+      mode: normal
+      dynamics: none
+      friendly_name: Closet Light
+      supported_features: 40
+      state: "off"
+  icon: mdi:ceiling-light-outline
+  metadata:
+    light.bed_frame:
+      entity_only: false
+    light.lifx_z_706098:
+      entity_only: false
+    light.lifx_d0_73_d5_43_b3_9d:
+      entity_only: false
+    light.overhead_light_1:
+      entity_only: false
+    light.overhead_light_3:
+      entity_only: false
+    light.closet_light:
+      entity_only: false
+    light.hue_color_lamp_1:
+      entity_only: false
+- id: "1648225087859"
+  name: Master Bathroom Lights
+  entities:
+    light.master_bathroom_main_lights:
+      supported_color_modes:
+        - brightness
+      color_mode: brightness
+      brightness: 255
+      device_id: "2"
+      zone_id: "1"
+      friendly_name: Master Bathroom_Main Lights
+      supported_features: 33
+      state: "on"
+    light.master_bathroom_shower_lights:
+      supported_color_modes:
+        - brightness
+      color_mode: brightness
+      brightness: 255
+      device_id: "3"
+      zone_id: "2"
+      friendly_name: Master Bathroom_Shower Lights
+      supported_features: 33
+      state: "on"
+- id: "1648226652313"
+  name: Turn on Bedroom Lights
+  entities:
+    switch.hue_motion_sensor_1_motion:
+      device_class: switch
+      friendly_name: Hue motion sensor 1 Motion
+      state: "on"
+    switch.hue_motion_sensor_1_illuminance:
+      device_class: switch
+      friendly_name: Hue motion sensor 1 Illuminance
+      state: "off"
+    light.bed_frame:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Record Shelf
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 285
+      hs_color:
+        - 27.165
+        - 44.6
+      rgb_color:
+        - 255
+        - 192
+        - 141
+      xy_color:
+        - 0.454
+        - 0.373
+      state: "on"
+    light.lifx_z_706098:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Bed Frame
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 357
+      hs_color:
+        - 28.185
+        - 62.588
+      rgb_color:
+        - 255
+        - 170
+        - 95
+      xy_color:
+        - 0.516
+        - 0.386
+      state: "on"
+    light.lifx_d0_73_d5_43_b3_9d:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Desk
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 92
+      color_temp: 285
+      hs_color:
+        - 27.165
+        - 44.6
+      rgb_color:
+        - 255
+        - 192
+        - 141
+      xy_color:
+        - 0.454
+        - 0.373
+      state: "on"
+    light.overhead_light_1:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+        - None
+        - candle
+        - fire
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead Light 1
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 400
+      hs_color:
+        - 28.874
+        - 72.522
+      rgb_color:
+        - 255
+        - 159
+        - 70
+      xy_color:
+        - 0.546
+        - 0.389
+      effect: None
+      state: "on"
+    light.overhead_light_3:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead Light 3
+      supported_features: 40
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 400
+      hs_color:
+        - 28.874
+        - 72.522
+      rgb_color:
+        - 255
+        - 159
+        - 70
+      xy_color:
+        - 0.546
+        - 0.389
+      state: "on"
+    light.hue_color_lamp_1:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead light 2
+      supported_features: 40
+      color_mode: color_temp
+      brightness: 255
+      hs_color:
+        - 28.874
+        - 72.522
+      rgb_color:
+        - 255
+        - 159
+        - 70
+      xy_color:
+        - 0.546
+        - 0.389
+      color_temp: 400
+      state: "on"
+  icon: mdi:ceiling-light
+  metadata:
+    light.bed_frame:
+      entity_only: false
+    light.lifx_z_706098:
+      entity_only: false
+    light.lifx_d0_73_d5_43_b3_9d:
+      entity_only: false
+    light.overhead_light_1:
+      entity_only: false
+    light.overhead_light_3:
+      entity_only: false
+    switch.hue_motion_sensor_1_motion:
+      entity_only: false
+    switch.hue_motion_sensor_1_illuminance:
+      entity_only: false
+    light.hue_color_lamp_1:
+      entity_only: false
+- id: "1654024962493"
+  name: Master Bedroom Default Lights
+  entities:
+    light.overhead_light_1:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+        - None
+        - candle
+        - fire
+      supported_color_modes:
+        - color_temp
+        - xy
+      friendly_name: Overhead Light 1
+      supported_features: 44
+      mode: normal
+      dynamics: none
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 366
+      hs_color:
+        - 28.327
+        - 64.71
+      rgb_color:
+        - 255
+        - 167
+        - 89
+      xy_color:
+        - 0.524
+        - 0.387
+      effect: None
+      state: "on"
+    light.overhead_light_2:
+      effect_list:
+        - None
+        - candle
+      supported_color_modes:
+        - brightness
+      friendly_name: Overhead Light 2
+      supported_features: 44
+      mode: normal
+      dynamics: none
+      color_mode: brightness
+      brightness: 255
+      effect: None
+      state: "on"
+    light.overhead_light_3:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+        - color_temp
+        - xy
+      friendly_name: Overhead Light 3
+      supported_features: 40
+      mode: normal
+      dynamics: none
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 308
+      hs_color:
+        - 27.464
+        - 50.594
+      rgb_color:
+        - 255
+        - 185
+        - 125
+      xy_color:
+        - 0.475
+        - 0.38
+      state: "on"
+    light.lifx_d0_73_d5_43_b3_9d:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Desk
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 92
+      color_temp: 285
+      hs_color:
+        - 27.165
+        - 44.6
+      rgb_color:
+        - 255
+        - 192
+        - 141
+      xy_color:
+        - 0.454
+        - 0.373
+      state: "on"
+    light.lifx_z_706098:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Bed Frame
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 357
+      hs_color:
+        - 28.185
+        - 62.588
+      rgb_color:
+        - 255
+        - 170
+        - 95
+      xy_color:
+        - 0.516
+        - 0.386
+      state: "on"
+    light.bed_frame:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Record Shelf
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 200
+      hs_color:
+        - 27.001
+        - 19.243
+      rgb_color:
+        - 255
+        - 228
+        - 205
+      xy_color:
+        - 0.372
+        - 0.35
+      state: "on"
+  metadata:
+    light.bed_frame:
+      entity_only: false
+    light.lifx_z_706098:
+      entity_only: false
+    light.lifx_d0_73_d5_43_b3_9d:
+      entity_only: false
+    light.overhead_light_1:
+      entity_only: false
+    light.overhead_light_2:
+      entity_only: false
+    light.overhead_light_3:
+      entity_only: false
+- id: "1654025259150"
+  name: Master Bedroom Reading
+  entities:
+    light.overhead_light_1:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+        - None
+        - candle
+        - fire
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead Light 1
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 153
+      color_temp: 500
+      hs_color:
+        - 30.601
+        - 94.547
+      rgb_color:
+        - 255
+        - 136
+        - 13
+      xy_color:
+        - 0.599
+        - 0.382
+      effect: None
+      state: "on"
+    light.overhead_light_3:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead Light 3
+      supported_features: 40
+      color_mode: color_temp
+      brightness: 153
+      color_temp: 492
+      hs_color:
+        - 30.46
+        - 92.836
+      rgb_color:
+        - 255
+        - 138
+        - 18
+      xy_color:
+        - 0.596
+        - 0.384
+      state: "on"
+    light.lifx_z_706098:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Bed Frame
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 204
+      hs_color:
+        - 28.874
+        - 72.522
+      rgb_color:
+        - 255
+        - 159
+        - 70
+      xy_color:
+        - 0.546
+        - 0.389
+      color_temp: 400
+      state: "on"
+    light.lifx_d0_73_d5_43_b3_9d:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Desk
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 158
+      color_temp: 400
+      hs_color:
+        - 28.874
+        - 72.522
+      rgb_color:
+        - 255
+        - 159
+        - 70
+      xy_color:
+        - 0.546
+        - 0.389
+      state: "on"
+    light.bed_frame:
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+        - effect_colorloop
+        - effect_pulse
+        - effect_stop
+      supported_color_modes:
+        - color_temp
+        - hs
+      friendly_name: Record Shelf
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 400
+      hs_color:
+        - 28.874
+        - 72.522
+      rgb_color:
+        - 255
+        - 159
+        - 70
+      xy_color:
+        - 0.546
+        - 0.389
+      state: "on"
+    light.hue_color_lamp_1:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+        - color_temp
+        - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Overhead light 2
+      supported_features: 40
+      color_mode: color_temp
+      brightness: 153
+      color_temp: 491
+      hs_color:
+        - 30.442
+        - 92.626
+      rgb_color:
+        - 255
+        - 138
+        - 18
+      xy_color:
+        - 0.596
+        - 0.384
+      state: "on"
+  icon: mdi:book-open-page-variant
+  metadata:
+    light.bed_frame:
+      entity_only: false
+    light.lifx_z_706098:
+      entity_only: false
+    light.lifx_d0_73_d5_43_b3_9d:
+      entity_only: false
+    light.overhead_light_1:
+      entity_only: false
+    light.overhead_light_3:
+      entity_only: false
+    light.hue_color_lamp_1:
+      entity_only: false
