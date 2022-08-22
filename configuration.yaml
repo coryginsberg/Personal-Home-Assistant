@@ -37,13 +37,14 @@ template:
         state: >
           {% set timestamp = state_attr('sensor.scale_cory_ginsberg_weight', 'entryTimestamp') %}
           {% set currentTime = now() %}
-          {% set daysSince = currentTime - timestamp %}
-          {% if daysSince.days == 0 %}
+          {% set daysSince = currentTime.day - timestamp.day %}
+          {{daysSince}}
+          {% if daysSince == 0 %}
             Today 
-          {% elif daysSince.days == 1 %}
+          {% elif daysSince == 1 %}
             Yesterday
           {% else %}
-            {{daysSince.days}} days ago
+            {{daysSince}} days ago
           {% endif %}
 
   - trigger:
@@ -57,6 +58,8 @@ template:
         attributes:
           weather_temperature_now: >
             {{ state_attr('weather.accuweather', 'temperature') | round }}
+          weather_condition_now: >
+            {{ states('weather.accuweather') }}
 
           weather_condition_0: >
             {{ state_attr('weather.accuweather', 'forecast')[0].condition }}

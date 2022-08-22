@@ -17,6 +17,7 @@
 .storage
 .google.token
 .uuid
+.HA_VERSION
 core.*
 core
 OZW_Log.txt

@@ -152,8 +152,7 @@ text_sensor:
     attribute: weather_temperature_now
     id: weather_temperature_now
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_condition_now
+    entity_id: weather.accuweather
     id: weather_condition_now
 
   # Today
@@ -254,7 +253,7 @@ display:
     lambda: |-
       // Weather Section
       it.print(240, 88, id(font_title), TextAlign::TOP_CENTER, "WEATHER"); 
-      it.printf(100, 158, id(font_weather_large), TextAlign::TOP_CENTER, "%s", weather_icon_map["sunny"].c_str());
+      it.printf(100, 158, id(font_weather_large), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_now).state.c_str()].c_str());
       it.printf(300, 158, id(font_large_bold), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_now).state.c_str());
       // 4 Day Forecast
       it.print(105, 282, id(font_small_book), TextAlign::TOP_CENTER, "Tod");
