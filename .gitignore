@@ -17,7 +17,6 @@
 .storage
 .google.token
 .uuid
-.HA_VERSION
 core.*
 core
 OZW_Log.txt
@@ -47,3 +46,4 @@ production_auth.json
 *.pem
 esphome/.esphome/
 esphome/secrets.yaml
+.HA_VERSION
