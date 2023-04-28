@@ -1,643 +1,949 @@
-- id: "1647922433245"
+- id: '1647922433245'
   name: Turn Off Bedroom Lights
   entities:
     light.bed_frame:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Record Shelf
-      supported_features: 36
-      state: "off"
-    light.hue_color_lamp_1:
-      min_mireds: 153
-      max_mireds: 500
-      supported_color_modes:
-        - color_temp
-        - xy
-      mode: normal
-      dynamics: none
-      friendly_name: Overhead light 2
-      supported_features: 40
-      state: "off"
-    light.lifx_z_706098:
-      min_mireds: 111
-      max_mireds: 400
-      effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
-      supported_color_modes:
-        - color_temp
-        - hs
+      - color_temp
+      - hs
       friendly_name: Bed Frame
       supported_features: 36
-      state: "off"
-    light.lifx_d0_73_d5_43_b3_9d:
+      state: 'off'
+    light.hue_color_lamp_1:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 1
+      supported_features: 44
+      state: 'off'
+    light.hue_color_lamp_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 2
+      supported_features: 44
+      state: 'off'
+    light.hue_color_lamp_3:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 3
+      supported_features: 44
+      state: 'off'
+    light.record_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Desk
+      - color_temp
+      - hs
+      friendly_name: Record Shelf
       supported_features: 36
-      state: "off"
-    light.overhead_light_1:
+      state: 'off'
+    switch.adaptive_lighting_sleep_mode_bedroom:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting Sleep Mode: Bedroom'
+      state: 'off'
+    light.desk_lightstrip:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
       min_mireds: 153
       max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      icon: mdi:led-strip-variant
+      friendly_name: Desk Lightstrip
+      supported_features: 40
+      state: 'off'
+    light.computer_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
       effect_list:
-        - None
-        - candle
-        - fire
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - xy
-      mode: normal
-      dynamics: none
-      friendly_name: Overhead Light 1
-      supported_features: 44
-      state: "off"
-    light.overhead_light_3:
-      min_mireds: 153
-      max_mireds: 500
-      supported_color_modes:
-        - color_temp
-        - xy
-      mode: normal
-      dynamics: none
-      friendly_name: Overhead Light 3
-      supported_features: 40
-      state: "off"
-    light.closet_light:
-      supported_color_modes:
-        - brightness
-      mode: normal
-      dynamics: none
-      friendly_name: Closet Light
-      supported_features: 40
-      state: "off"
+      - color_temp
+      - hs
+      friendly_name: Computer Shelf
+      supported_features: 36
+      state: 'off'
   icon: mdi:ceiling-light-outline
   metadata:
-    light.bed_frame:
-      entity_only: false
-    light.lifx_z_706098:
-      entity_only: false
-    light.lifx_d0_73_d5_43_b3_9d:
-      entity_only: false
-    light.overhead_light_1:
-      entity_only: false
-    light.overhead_light_3:
-      entity_only: false
-    light.closet_light:
-      entity_only: false
-    light.hue_color_lamp_1:
-      entity_only: false
-- id: "1648225087859"
+    switch.adaptive_lighting_sleep_mode_bedroom:
+      entity_only: true
+- id: '1648225087859'
   name: Master Bathroom Lights
   entities:
     light.master_bathroom_main_lights:
       supported_color_modes:
-        - brightness
+      - brightness
       color_mode: brightness
       brightness: 255
-      device_id: "2"
-      zone_id: "1"
+      device_id: '2'
+      zone_id: '1'
       friendly_name: Master Bathroom_Main Lights
       supported_features: 33
-      state: "on"
+      state: 'on'
     light.master_bathroom_shower_lights:
       supported_color_modes:
-        - brightness
+      - brightness
       color_mode: brightness
       brightness: 255
-      device_id: "3"
-      zone_id: "2"
+      device_id: '3'
+      zone_id: '2'
       friendly_name: Master Bathroom_Shower Lights
       supported_features: 33
-      state: "on"
-- id: "1648226652313"
+      state: 'on'
+- id: '1648226652313'
   name: Turn on Bedroom Lights
   entities:
-    switch.hue_motion_sensor_1_motion:
-      device_class: switch
-      friendly_name: Hue motion sensor 1 Motion
-      state: "on"
-    switch.hue_motion_sensor_1_illuminance:
-      device_class: switch
-      friendly_name: Hue motion sensor 1 Illuminance
-      state: "off"
-    light.bed_frame:
+    light.hue_color_lamp_1:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 3003
+      color_temp: 333
+      hs_color:
+      - 27.82
+      - 56.814
+      rgb_color:
+      - 255
+      - 177
+      - 110
+      xy_color:
+      - 0.496
+      - 0.383
+      effect: None
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 1
+      supported_features: 44
+      state: 'on'
+    light.hue_color_lamp_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 3003
+      color_temp: 333
+      hs_color:
+      - 27.82
+      - 56.814
+      rgb_color:
+      - 255
+      - 177
+      - 110
+      xy_color:
+      - 0.496
+      - 0.383
+      effect: None
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 2
+      supported_features: 44
+      state: 'on'
+    light.hue_color_lamp_3:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 3003
+      color_temp: 333
+      hs_color:
+      - 27.82
+      - 56.814
+      rgb_color:
+      - 255
+      - 177
+      - 110
+      xy_color:
+      - 0.496
+      - 0.383
+      effect: None
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 3
+      supported_features: 44
+      state: 'on'
+    light.record_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - hs
+      - color_temp
+      - hs
+      color_mode: hs
+      brightness: 255
+      hs_color:
+      - 27.17
+      - 20.783
+      rgb_color:
+      - 255
+      - 226
+      - 202
+      xy_color:
+      - 0.376
+      - 0.351
+      effect: effect_move
       friendly_name: Record Shelf
       supported_features: 36
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 285
-      hs_color:
-        - 27.165
-        - 44.6
-      rgb_color:
-        - 255
-        - 192
-        - 141
-      xy_color:
-        - 0.454
-        - 0.373
-      state: "on"
-    light.lifx_z_706098:
-      min_mireds: 111
-      max_mireds: 400
-      effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
-      supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Bed Frame
-      supported_features: 36
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 357
-      hs_color:
-        - 28.185
-        - 62.588
-      rgb_color:
-        - 255
-        - 170
-        - 95
-      xy_color:
-        - 0.516
-        - 0.386
-      state: "on"
-    light.lifx_d0_73_d5_43_b3_9d:
+      state: 'on'
+    light.bed_frame:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Desk
+      - color_temp
+      - hs
+      color_mode: hs
+      brightness: 255
+      hs_color:
+      - 27.17
+      - 20.783
+      rgb_color:
+      - 255
+      - 226
+      - 202
+      xy_color:
+      - 0.376
+      - 0.351
+      friendly_name: Bed Frame
       supported_features: 36
-      color_mode: color_temp
-      brightness: 92
-      color_temp: 285
-      hs_color:
-        - 27.165
-        - 44.6
+      state: 'on'
+    switch.adaptive_lighting_bedroom:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Bedroom'
+      brightness_pct: 100
+      color_temp_kelvin: 4905
       rgb_color:
-        - 255
-        - 192
-        - 141
+      - 255
+      - 226.10436947587402
+      - 202.60092778153455
       xy_color:
-        - 0.454
-        - 0.373
-      state: "on"
-    light.overhead_light_1:
-      min_mireds: 153
-      max_mireds: 500
+      - 0.375
+      - 0.351
+      hs_color:
+      - 27.17
+      - 20.784
+      sun_position: 0.8302302655256727
+      manual_control:
+      - light.computer_shelf
+      - light.record_shelf
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_bedroom:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting Sleep Mode: Bedroom'
+      state: 'off'
+    light.computer_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
       effect_list:
-        - None
-        - candle
-        - fire
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - xy
-      mode: normal
-      dynamics: none
-      friendly_name: Overhead Light 1
-      supported_features: 44
-      color_mode: color_temp
+      - color_temp
+      - hs
+      color_mode: hs
       brightness: 255
-      color_temp: 400
       hs_color:
-        - 28.874
-        - 72.522
+      - 27.17
+      - 20.783
       rgb_color:
-        - 255
-        - 159
-        - 70
+      - 255
+      - 226
+      - 202
       xy_color:
-        - 0.546
-        - 0.389
-      effect: None
-      state: "on"
-    light.overhead_light_3:
+      - 0.376
+      - 0.351
+      friendly_name: Computer Shelf
+      supported_features: 36
+      state: 'on'
+    light.desk_lightstrip:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
       min_mireds: 153
       max_mireds: 500
       supported_color_modes:
-        - color_temp
-        - xy
+      - color_temp
+      - xy
+      color_mode: xy
+      brightness: 153
+      hs_color:
+      - 26.038
+      - 20.784
+      rgb_color:
+      - 255
+      - 225
+      - 202
+      xy_color:
+      - 0.376
+      - 0.351
       mode: normal
       dynamics: none
-      friendly_name: Overhead Light 3
+      icon: mdi:led-strip-variant
+      friendly_name: Desk Lightstrip
       supported_features: 40
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 400
-      hs_color:
-        - 28.874
-        - 72.522
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_bed_frame:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting Sleep Mode: Bed Frame'
+      state: 'off'
+    switch.adaptive_lighting_sleep_mode_desk:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting Sleep Mode: Desk'
+      state: 'off'
+    switch.adaptive_lighting_desk:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Desk'
+      brightness_pct: 60
+      color_temp_kelvin: 4900
       rgb_color:
-        - 255
-        - 159
-        - 70
+      - 255
+      - 226.00292040783899
+      - 202.4234546871441
       xy_color:
-        - 0.546
-        - 0.389
-      state: "on"
-    light.hue_color_lamp_1:
-      min_mireds: 153
-      max_mireds: 500
-      supported_color_modes:
-        - color_temp
-        - xy
-      mode: normal
-      dynamics: none
-      friendly_name: Overhead light 2
-      supported_features: 40
-      color_mode: color_temp
-      brightness: 255
+      - 0.375
+      - 0.351
       hs_color:
-        - 28.874
-        - 72.522
+      - 27.17
+      - 20.784
+      sun_position: 0.8290021958121381
+      manual_control: []
+      state: 'on'
+    switch.adaptive_lighting_bed_frame:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Bed Frame'
+      brightness_pct: 100
+      color_temp_kelvin: 4910
       rgb_color:
-        - 255
-        - 159
-        - 70
+      - 255
+      - 226.20571518263995
+      - 202.77817378297192
       xy_color:
-        - 0.546
-        - 0.389
-      color_temp: 400
-      state: "on"
+      - 0.375
+      - 0.351
+      hs_color:
+      - 27.17
+      - 20.784
+      sun_position: 0.831570040343107
+      manual_control: []
+      state: 'on'
   icon: mdi:ceiling-light
   metadata:
-    light.bed_frame:
-      entity_only: false
-    light.lifx_z_706098:
-      entity_only: false
-    light.lifx_d0_73_d5_43_b3_9d:
-      entity_only: false
-    light.overhead_light_1:
-      entity_only: false
-    light.overhead_light_3:
-      entity_only: false
-    switch.hue_motion_sensor_1_motion:
-      entity_only: false
-    switch.hue_motion_sensor_1_illuminance:
-      entity_only: false
-    light.hue_color_lamp_1:
-      entity_only: false
-- id: "1654024962493"
-  name: Master Bedroom Default Lights
-  entities:
-    light.overhead_light_1:
-      min_mireds: 153
-      max_mireds: 500
-      effect_list:
-        - None
-        - candle
-        - fire
-      supported_color_modes:
-        - color_temp
-        - xy
-      friendly_name: Overhead Light 1
-      supported_features: 44
-      mode: normal
-      dynamics: none
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 366
-      hs_color:
-        - 28.327
-        - 64.71
-      rgb_color:
-        - 255
-        - 167
-        - 89
-      xy_color:
-        - 0.524
-        - 0.387
-      effect: None
-      state: "on"
-    light.overhead_light_2:
-      effect_list:
-        - None
-        - candle
-      supported_color_modes:
-        - brightness
-      friendly_name: Overhead Light 2
-      supported_features: 44
-      mode: normal
-      dynamics: none
-      color_mode: brightness
-      brightness: 255
-      effect: None
-      state: "on"
-    light.overhead_light_3:
-      min_mireds: 153
-      max_mireds: 500
-      supported_color_modes:
-        - color_temp
-        - xy
-      friendly_name: Overhead Light 3
-      supported_features: 40
-      mode: normal
-      dynamics: none
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 308
-      hs_color:
-        - 27.464
-        - 50.594
-      rgb_color:
-        - 255
-        - 185
-        - 125
-      xy_color:
-        - 0.475
-        - 0.38
-      state: "on"
-    light.lifx_d0_73_d5_43_b3_9d:
-      min_mireds: 111
-      max_mireds: 666
-      effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
-      supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Desk
-      supported_features: 36
-      color_mode: color_temp
-      brightness: 92
-      color_temp: 285
-      hs_color:
-        - 27.165
-        - 44.6
-      rgb_color:
-        - 255
-        - 192
-        - 141
-      xy_color:
-        - 0.454
-        - 0.373
-      state: "on"
-    light.lifx_z_706098:
-      min_mireds: 111
-      max_mireds: 400
-      effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
-      supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Bed Frame
-      supported_features: 36
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 357
-      hs_color:
-        - 28.185
-        - 62.588
-      rgb_color:
-        - 255
-        - 170
-        - 95
-      xy_color:
-        - 0.516
-        - 0.386
-      state: "on"
-    light.bed_frame:
-      min_mireds: 111
-      max_mireds: 666
-      effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
-      supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Record Shelf
-      supported_features: 36
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 200
-      hs_color:
-        - 27.001
-        - 19.243
-      rgb_color:
-        - 255
-        - 228
-        - 205
-      xy_color:
-        - 0.372
-        - 0.35
-      state: "on"
-  metadata:
-    light.bed_frame:
-      entity_only: false
-    light.lifx_z_706098:
-      entity_only: false
-    light.lifx_d0_73_d5_43_b3_9d:
-      entity_only: false
-    light.overhead_light_1:
-      entity_only: false
-    light.overhead_light_2:
-      entity_only: false
-    light.overhead_light_3:
-      entity_only: false
-- id: "1654025259150"
+    switch.adaptive_lighting_bedroom:
+      entity_only: true
+    switch.adaptive_lighting_sleep_mode_bedroom:
+      entity_only: true
+    switch.adaptive_lighting_sleep_mode_bed_frame:
+      entity_only: true
+    switch.adaptive_lighting_sleep_mode_desk:
+      entity_only: true
+    switch.adaptive_lighting_desk:
+      entity_only: true
+    switch.adaptive_lighting_bed_frame:
+      entity_only: true
+- id: '1654025259150'
   name: Master Bedroom Reading
   entities:
-    light.overhead_light_1:
+    light.bed_frame:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      color_mode: hs
+      brightness: 153
+      hs_color:
+      - 31.998
+      - 100
+      rgb_color:
+      - 255
+      - 135
+      - 0
+      xy_color:
+      - 0.602
+      - 0.383
+      friendly_name: Bed Frame
+      supported_features: 36
+      state: 'on'
+    light.hue_color_lamp_1:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - None
-        - candle
-        - fire
+      - None
+      - candle
+      - fire
       supported_color_modes:
-        - color_temp
-        - xy
-      mode: normal
-      dynamics: none
-      friendly_name: Overhead Light 1
-      supported_features: 44
+      - color_temp
+      - xy
       color_mode: color_temp
-      brightness: 153
+      brightness: 191
+      color_temp_kelvin: 2000
       color_temp: 500
       hs_color:
-        - 30.601
-        - 94.547
+      - 30.601
+      - 94.547
       rgb_color:
-        - 255
-        - 136
-        - 13
+      - 255
+      - 136
+      - 13
       xy_color:
-        - 0.599
-        - 0.382
+      - 0.599
+      - 0.382
       effect: None
-      state: "on"
-    light.overhead_light_3:
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 1
+      supported_features: 44
+      state: 'on'
+    light.hue_color_lamp_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 191
+      color_temp_kelvin: 2000
+      color_temp: 500
+      hs_color:
+      - 30.601
+      - 94.547
+      rgb_color:
+      - 255
+      - 136
+      - 13
+      xy_color:
+      - 0.599
+      - 0.382
+      effect: None
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 2
+      supported_features: 44
+      state: 'on'
+    light.hue_color_lamp_3:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 191
+      color_temp_kelvin: 2000
+      color_temp: 500
+      hs_color:
+      - 30.601
+      - 94.547
+      rgb_color:
+      - 255
+      - 136
+      - 13
+      xy_color:
+      - 0.599
+      - 0.382
+      effect: None
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 3
+      supported_features: 44
+      state: 'on'
+    switch.master_bathroom_light_switch:
+      friendly_name: Master Bathroom Light Switch
+      state: 'off'
+    light.record_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      color_mode: hs
+      brightness: 26
+      hs_color:
+      - 38.118
+      - 100
+      rgb_color:
+      - 255
+      - 162
+      - 0
+      xy_color:
+      - 0.566
+      - 0.413
+      effect: effect_move
+      friendly_name: Record Shelf
+      supported_features: 36
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_bedroom:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting Sleep Mode: Bedroom'
+      state: 'on'
+    light.desk_lightstrip:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
       min_mireds: 153
       max_mireds: 500
       supported_color_modes:
-        - color_temp
-        - xy
+      - color_temp
+      - xy
+      color_mode: xy
+      brightness: 3
+      hs_color:
+      - 38.182
+      - 99.216
+      rgb_color:
+      - 255
+      - 163
+      - 2
+      xy_color:
+      - 0.566
+      - 0.413
       mode: normal
       dynamics: none
-      friendly_name: Overhead Light 3
+      icon: mdi:led-strip-variant
+      friendly_name: Desk Lightstrip
       supported_features: 40
-      color_mode: color_temp
-      brightness: 153
-      color_temp: 492
-      hs_color:
-        - 30.46
-        - 92.836
-      rgb_color:
-        - 255
-        - 138
-        - 18
-      xy_color:
-        - 0.596
-        - 0.384
-      state: "on"
-    light.lifx_z_706098:
+      state: 'on'
+    light.computer_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
-      max_mireds: 400
+      max_mireds: 666
       effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - hs
+      - color_temp
+      - hs
+      color_mode: hs
+      brightness: 26
+      hs_color:
+      - 38.118
+      - 100
+      rgb_color:
+      - 255
+      - 162
+      - 0
+      xy_color:
+      - 0.566
+      - 0.413
+      friendly_name: Computer Shelf
+      supported_features: 36
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_bed_frame:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting Sleep Mode: Bed Frame'
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_desk:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting Sleep Mode: Desk'
+      state: 'on'
+  icon: mdi:book-open-page-variant
+  metadata:
+    switch.adaptive_lighting_sleep_mode_bedroom:
+      entity_only: true
+    switch.adaptive_lighting_sleep_mode_bed_frame:
+      entity_only: true
+    switch.adaptive_lighting_sleep_mode_desk:
+      entity_only: true
+- id: '1670447729812'
+  name: Master Bedroom Live Stream
+  entities:
+    light.hue_color_lamp_1:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 1
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 4016
+      color_temp: 249
+      hs_color:
+      - 26.805
+      - 34.581
+      rgb_color:
+      - 255
+      - 206
+      - 166
+      xy_color:
+      - 0.42
+      - 0.365
+      effect: None
+      state: 'on'
+    light.hue_color_lamp_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 2
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 4016
+      color_temp: 249
+      hs_color:
+      - 26.805
+      - 34.581
+      rgb_color:
+      - 255
+      - 206
+      - 166
+      xy_color:
+      - 0.42
+      - 0.365
+      effect: None
+      state: 'on'
+    light.hue_color_lamp_3:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan 3
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 4016
+      color_temp: 249
+      hs_color:
+      - 26.805
+      - 34.581
+      rgb_color:
+      - 255
+      - 206
+      - 166
+      xy_color:
+      - 0.42
+      - 0.365
+      effect: None
+      state: 'on'
+    light.bed_frame:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
+      supported_color_modes:
+      - color_temp
+      - hs
       friendly_name: Bed Frame
       supported_features: 36
       color_mode: color_temp
-      brightness: 204
+      brightness: 255
       hs_color:
-        - 28.874
-        - 72.522
+      - 27.028
+      - 18.905
       rgb_color:
-        - 255
-        - 159
-        - 70
+      - 255
+      - 228
+      - 206
       xy_color:
-        - 0.546
-        - 0.389
-      color_temp: 400
-      state: "on"
-    light.lifx_d0_73_d5_43_b3_9d:
+      - 0.371
+      - 0.349
+      color_temp_kelvin: 5025
+      color_temp: 199
+      state: 'on'
+    light.record_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
       supported_color_modes:
-        - color_temp
-        - hs
-      friendly_name: Desk
-      supported_features: 36
-      color_mode: color_temp
-      brightness: 158
-      color_temp: 400
-      hs_color:
-        - 28.874
-        - 72.522
-      rgb_color:
-        - 255
-        - 159
-        - 70
-      xy_color:
-        - 0.546
-        - 0.389
-      state: "on"
-    light.bed_frame:
-      min_mireds: 111
-      max_mireds: 666
-      effect_list:
-        - effect_colorloop
-        - effect_pulse
-        - effect_stop
-      supported_color_modes:
-        - color_temp
-        - hs
+      - color_temp
+      - hs
       friendly_name: Record Shelf
       supported_features: 36
-      color_mode: color_temp
-      brightness: 255
-      color_temp: 400
-      hs_color:
-        - 28.874
-        - 72.522
+      state: 'off'
+    select.record_shelf_theme:
+      options:
+      - autumn
+      - blissful
+      - bias_lighting
+      - calaveras
+      - cheerful
+      - christmas
+      - dream
+      - energizing
+      - epic
+      - evening
+      - exciting
+      - fantasy
+      - focusing
+      - gentle
+      - halloween
+      - hanukkah
+      - holly
+      - hygge
+      - independence
+      - intense
+      - love
+      - kwanzaa
+      - mellow
+      - party
+      - peaceful
+      - powerful
+      - proud
+      - pumpkin
+      - relaxing
+      - romance
+      - santa
+      - serene
+      - shamrock
+      - soothing
+      - spacey
+      - sports
+      - spring
+      - stardust
+      - thanksgiving
+      - tranquil
+      - warming
+      - zombie
+      friendly_name: Record Shelf Theme
+      state: fantasy
+    switch.adaptive_lighting_bedroom:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Bedroom'
+      brightness_pct:
+      color_temp_kelvin:
       rgb_color:
-        - 255
-        - 159
-        - 70
       xy_color:
-        - 0.546
-        - 0.389
-      state: "on"
-    light.hue_color_lamp_1:
+      hs_color:
+      sun_position:
+      state: 'off'
+    light.desk_lightstrip:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
       min_mireds: 153
       max_mireds: 500
       supported_color_modes:
-        - color_temp
-        - xy
+      - color_temp
+      - xy
       mode: normal
       dynamics: none
-      friendly_name: Overhead light 2
+      icon: mdi:led-strip-variant
+      friendly_name: Desk Lightstrip
       supported_features: 40
-      color_mode: color_temp
-      brightness: 153
-      color_temp: 491
+      color_mode: xy
+      brightness: 128
       hs_color:
-        - 30.442
-        - 92.626
+      - 25.2
+      - 19.608
       rgb_color:
-        - 255
-        - 138
-        - 18
+      - 255
+      - 226
+      - 205
       xy_color:
-        - 0.596
-        - 0.384
-      state: "on"
-  icon: mdi:book-open-page-variant
+      - 0.373
+      - 0.349
+      state: 'on'
+    light.computer_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      friendly_name: Computer Shelf
+      supported_features: 36
+      color_mode: color_temp
+      brightness: 191
+      hs_color:
+      - 26.728
+      - 26.465
+      rgb_color:
+      - 255
+      - 217
+      - 187
+      xy_color:
+      - 0.394
+      - 0.357
+      color_temp_kelvin: 4502
+      color_temp: 222
+      state: 'on'
+  icon: mdi:presentation
   metadata:
-    light.bed_frame:
-      entity_only: false
-    light.lifx_z_706098:
-      entity_only: false
-    light.lifx_d0_73_d5_43_b3_9d:
-      entity_only: false
-    light.overhead_light_1:
-      entity_only: false
-    light.overhead_light_3:
-      entity_only: false
-    light.hue_color_lamp_1:
-      entity_only: false
+    light.record_shelf:
+      entity_only: true
+    select.record_shelf_theme:
+      entity_only: true
+    switch.adaptive_lighting_bedroom:
+      entity_only: true

@@ -42,7 +42,7 @@ time:
     id: homeassistant_time
     on_time: 
       - seconds: 0
-        minutes: /5
+        minutes: /15
         then:
           - component.update: oled_display
       
@@ -139,7 +139,7 @@ sensor:
     update_interval: 60s
 
   - platform: homeassistant
-    entity_id: sensor.master_bathroom_ecobee_sensor_temperature
+    entity_id: sensor.master_bathroom_temperature
     id: bathroom_temperature
   - platform: homeassistant
     entity_id: sensor.shower_humidity_sensor_humidity
@@ -148,41 +148,34 @@ sensor:
 text_sensor:
   # Current
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_now
+    entity_id: sensor.pirateweather_temperature
     id: weather_temperature_now
   - platform: homeassistant
-    entity_id: weather.accuweather
+    entity_id: sensor.pirateweather_icon
     id: weather_condition_now
 
   # Today
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_condition_0
+    entity_id: sensor.pirateweather_icon_0d
     id: weather_condition_0
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_0
+    entity_id: sensor.pirateweather_daytime_high_temperature_0d
     id: weather_temperature_0
 
   # Tomorrow
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_condition_1
+    entity_id: sensor.pirateweather_icon_1d
     id: weather_condition_1
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_1
+    entity_id: sensor.pirateweather_daytime_high_temperature_1d
     id: weather_temperature_1
 
   # 2 Days
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_condition_2
+    entity_id: sensor.pirateweather_icon_2d
     id: weather_condition_2
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_2
+    entity_id: sensor.pirateweather_daytime_high_temperature_2d
     id: weather_temperature_2
   - platform: homeassistant
     entity_id: sensor.weather_data
@@ -191,12 +184,10 @@ text_sensor:
 
   # 3 Days
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_condition_3
+    entity_id: sensor.pirateweather_icon_3d
     id: weather_condition_3
   - platform: homeassistant
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_3
+    entity_id: sensor.pirateweather_daytime_high_temperature_3d
     id: weather_temperature_3
   - platform: homeassistant
     entity_id: sensor.weather_data
@@ -246,7 +237,7 @@ display:
     dc_pin: GPIO27
     busy_pin: GPIO25
     reset_pin: GPIO26
-    model: 7.50inV2
+    model: 7.50in-bV2
     update_interval: never
     rotation: 90°
     id: oled_display

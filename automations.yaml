@@ -112,20 +112,12 @@
           - master_bedroom
           - master_bathroom
           - closet
-      - type: turn_off
-        device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-        entity_id: switch.hue_motion_sensor_1_motion
-        domain: switch
       - delay:
           hours: 1
           minutes: 0
           seconds: 0
           milliseconds: 0
-      - type: turn_on
-        device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-        entity_id: switch.hue_motion_sensor_1_motion
-        domain: switch
-      - service: input_boolean.turn_off
+      - service: input_boolean.turn_on
         data: {}
         target:
           entity_id: input_boolean.bedroom_motion_sensor_state
@@ -134,10 +126,6 @@
         target:
           entity_id: scene.bedroom_lights
         metadata: {}
-      - type: turn_on
-        device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-        entity_id: switch.hue_motion_sensor_1_motion
-        domain: switch
       - service: input_boolean.turn_on
         data: {}
         target:
@@ -149,53 +137,120 @@
         target:
           entity_id: scene.master_bedroom_reading
         metadata: {}
-      - service: media_player.media_play_pause
+      - delay:
+          hours: 1
+          minutes: 0
+          seconds: 0
+          milliseconds: 0
+      - service: input_boolean.turn_on
         data: {}
         target:
-          entity_id: media_player.bedroom_sonos
-      - if:
-        - condition: device
-          device_id: 62b4389f3b5b909f36ce07fe53905f01
-          domain: media_player
-          entity_id: media_player.bedroom_sonos
-          type: is_playing
-        then:
-        - service: media_player.media_stop
-          data: {}
-          target:
-            entity_id: media_player.bedroom_sonos
-        else:
-        - service: media_player.play_media
-          target:
-            entity_id: media_player.bedroom_sonos
-          data:
-            media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/spotify:playlist:5FmmxErJczcrEwIFGIviYo
-            media_content_type: spotify://playlist
-          metadata:
-            title: lofi hip hop music - beats to sleep/chill to
-            thumbnail: https://i.scdn.co/image/ab67706c0000bebb00160fc063fe17f7d9c84df6
-            media_class: playlist
-            children_media_class: track
-            navigateIds:
-            - {}
-            - media_content_type: spotify://library
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d
-            - media_content_type: spotify://current_user_playlists
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/current_user_playlists
-            - media_content_type: spotify://playlist
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/spotify:playlist:5FmmxErJczcrEwIFGIviYo
+          entity_id: input_boolean.bedroom_motion_sensor_state
+      down_raise:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.is_pico_down_held
+      - repeat:
+          while:
+          - condition: state
+            entity_id: input_boolean.is_pico_down_held
+            state: 'on'
+          sequence:
+          - service: media_player.volume_down
+            data: {}
+            target:
+              entity_id: media_player.bedroom_sonos
       down_lower:
-      - service: media_player.volume_down
+      - service: input_boolean.turn_on
         data: {}
         target:
+          entity_id: input_boolean.is_pico_down_held
+      - repeat:
+          while:
+          - condition: state
+            entity_id: input_boolean.is_pico_down_held
+            state: 'on'
+          sequence:
+          - service: media_player.volume_down
+            data: {}
+            target:
+              entity_id: media_player.bedroom_sonos
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 0
+              milliseconds: 150
+      middle_stop_release:
+      - service: media_player.shuffle_set
+        data:
+          shuffle: true
+        target:
           entity_id: media_player.bedroom_sonos
-      middle_stop_release: []
+      - service: media_player.play_media
+        data:
+          media_content_type: playlist
+          enqueue: replace
+          media_content_id: https://open.spotify.com/playlist/5FmmxErJczcrEwIFGIviYo?si=c0716743e2314117
+        target:
+          entity_id: media_player.bedroom_sonos
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.bedroom_motion_sensor_state
       up_raise:
-      - service: media_player.volume_up
+      - service: input_boolean.turn_on
         data: {}
         target:
-          entity_id: media_player.bedroom_sonos
-      bottom_off_release: []
+          entity_id: input_boolean.is_pico_up_held
+      - repeat:
+          while:
+          - condition: state
+            entity_id: input_boolean.is_pico_up_held
+            state: 'on'
+          sequence:
+          - service: media_player.volume_up
+            data: {}
+            target:
+              entity_id: media_player.bedroom_sonos
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 0
+              milliseconds: 150
+      up_lower:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.is_pico_up_held
+      bottom_off_release:
+      - service: media_player.media_pause
+        data: {}
+        target:
+          device_id: 62b4389f3b5b909f36ce07fe53905f01
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.bedroom_motion_sensor_state
+      - delay:
+          hours: 1
+          minutes: 0
+          seconds: 0
+          milliseconds: 0
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.bedroom_motion_sensor_state
+      up_raise_release:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.is_pico_up_held
+      down_lower_release:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.is_pico_down_held
 - id: '1648172536134'
   alias: Auto Bathroom Fan with Humidity
   description: ''
@@ -288,7 +343,7 @@
   - type: motion
     platform: device
     device_id: 3739f694a0054133a3b5a94c62b48016
-    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_110e9007_ias_zone
+    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone
     domain: binary_sensor
   condition:
   - condition: time
@@ -438,50 +493,88 @@
   trigger:
   - type: motion
     platform: device
-    device_id: aea80c457d793f16da9836a98e4e9cc7
-    entity_id: binary_sensor.master_bathroom_fan_switch_home_security_motion_detection
+    device_id: 1affbb39843799ce8a8e31386f0d2fa3
+    entity_id: binary_sensor.bedroom_motion_sensor_home_security_motion_detection
     domain: binary_sensor
   condition:
   - condition: and
     conditions:
-    - condition: time
-      before: '23:30:00'
-      after: 07:45:00
     - condition: state
       entity_id: input_boolean.bedroom_motion_sensor_state
       state: 'on'
+    - condition: or
+      conditions:
+      - condition: time
+        before: '23:00:00'
+        after: 07:45:00
+        weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+      - condition: time
+        before: '23:30:00'
+        after: '10:00:00'
+        weekday:
+        - sat
+        - sun
+    - condition: or
+      conditions:
+      - condition: device
+        type: is_off
+        device_id: 8e5b5d5ca53c2f2527f5e18988bd2487
+        entity_id: light.bed_frame
+        domain: light
+      - condition: device
+        type: is_off
+        device_id: 4bbcbe58ef5ba2acce372f9492da287d
+        entity_id: light.desk_lightstrip
+        domain: light
+      - condition: device
+        type: is_off
+        device_id: b12cc8903d4c5327c3b2be37f7a2e912
+        entity_id: light.computer_shelf
+        domain: light
+      - condition: device
+        type: is_off
+        device_id: 7d3da82cc61061af25542b16321d89a3
+        entity_id: light.record_shelf
+        domain: light
   action:
   - service: scene.turn_on
     target:
       entity_id: scene.bedroom_lights
     metadata: {}
-  - delay:
-      hours: 1
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
   - if:
     - type: is_no_motion
       condition: device
       device_id: 1affbb39843799ce8a8e31386f0d2fa3
       entity_id: binary_sensor.bedroom_motion_sensor_home_security_motion_detection
       domain: binary_sensor
+      for:
+        hours: 1
+        minutes: 0
+        seconds: 0
     then:
     - service: scene.turn_on
       target:
         entity_id: scene.new_scene
       metadata: {}
+  - service: adaptive_lighting.apply
+    data:
+      entity_id: light.desk
   mode: restart
 - id: '1654627625747'
   alias: Turn lights off when I leave
   description: ''
   trigger:
   - platform: device
-    device_id: cb8ccd94d6506f4e965763ba5f46434a
+    device_id: 5ed4cc4b65ea1e76aea4bfbb88f98cd6
     domain: device_tracker
-    entity_id: device_tracker.corys_iphone
+    entity_id: device_tracker.corys_iphone_6
     type: leaves
-    zone: zone.bedroom
+    zone: zone.home
   condition:
   - type: is_no_motion
     condition: device
@@ -510,24 +603,6 @@
       light_target:
         area_id: closet
       no_motion_wait: 600
-- id: '1655226291709'
-  alias: Run speed test after network update
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_off
-    device_id: f1ac29f18d9651788817c301f24c233d
-    entity_id: update.ugw3
-    domain: update
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-  condition: []
-  action:
-  - service: speedtestdotnet.speedtest
-    data: {}
-  mode: single
 - id: '1655226482993'
   alias: Send a notification when internet speeds are low
   description: ''
@@ -566,7 +641,7 @@
   - type: opened
     platform: device
     device_id: 59ef993e8b02fa4181eadbb94685e59c
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_b9610708_on_off
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
     domain: binary_sensor
   condition: []
   action:
@@ -582,7 +657,7 @@
   - type: not_opened
     platform: device
     device_id: 59ef993e8b02fa4181eadbb94685e59c
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_b9610708_on_off
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
     domain: binary_sensor
   condition: []
   action:
@@ -679,53 +754,32 @@
         target:
           entity_id: scene.master_bedroom_reading
         metadata: {}
-      - service: media_player.media_play_pause
+      - delay:
+          hours: 1
+          minutes: 0
+          seconds: 0
+          milliseconds: 0
+      - service: input_boolean.turn_on
         data: {}
         target:
-          entity_id: media_player.bedroom_sonos
-      - if:
-        - condition: device
-          device_id: 62b4389f3b5b909f36ce07fe53905f01
-          domain: media_player
-          entity_id: media_player.bedroom_sonos
-          type: is_playing
-        then:
-        - service: media_player.media_stop
-          data: {}
-          target:
-            entity_id: media_player.bedroom_sonos
-        else:
-        - service: media_player.play_media
-          target:
-            entity_id: media_player.bedroom_sonos
-          data:
-            media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/spotify:playlist:5FmmxErJczcrEwIFGIviYo
-            media_content_type: spotify://playlist
-          metadata:
-            title: lofi hip hop music - beats to sleep/chill to
-            thumbnail: https://i.scdn.co/image/ab67706c0000bebb00160fc063fe17f7d9c84df6
-            media_class: playlist
-            children_media_class: track
-            navigateIds:
-            - {}
-            - media_content_type: spotify://library
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d
-            - media_content_type: spotify://current_user_playlists
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/current_user_playlists
-            - media_content_type: spotify://playlist
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/spotify:playlist:5FmmxErJczcrEwIFGIviYo
+          entity_id: input_boolean.bedroom_motion_sensor_state
       down_lower:
       - service: media_player.volume_down
         data: {}
         target:
           entity_id: media_player.bedroom_sonos
-      middle_stop_release: []
+      middle_stop_release:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.bedroom_motion_sensor_state
       up_raise:
       - service: media_player.volume_up
         data: {}
         target:
           entity_id: media_player.bedroom_sonos
       bottom_off_release: []
+      up_raise_release: []
 - id: '1656344265978'
   alias: Auto Bathroom Fan With Humidity
   description: ''
@@ -733,11 +787,12 @@
     path: celsian/humidity_mod.yaml
     input:
       humidity_sensor: sensor.shower_humidity_sensor_humidity
-      reference_humidity_sensor: sensor.my_ecobee_humidity
+      reference_humidity_sensor: sensor.my_ecobee_current_humidity
       fan_switch: switch.master_bathroom_fan_switch
       humidity_automation_boolean: input_boolean.manually_turned_on_bathroom_fan
-      rising_threshold: 20
-      falling_threshold: 20
+      rising_threshold: 25
+      falling_threshold: 25
+      reference_humidity: '55'
 - id: '1656344746725'
   alias: Manually turn on master bathroom fan
   description: ''
@@ -785,7 +840,7 @@
   - type: opened
     platform: device
     device_id: e06021ed3c39f842c16d7d50aeb16583
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_on_off
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
     domain: binary_sensor
   condition: []
   action:
@@ -795,13 +850,13 @@
     domain: light
   mode: single
 - id: '1657235561493'
-  alias: New Automation
+  alias: Turn Off Closet Light When Door Closes
   description: ''
   trigger:
   - type: not_opened
     platform: device
     device_id: e06021ed3c39f842c16d7d50aeb16583
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_on_off
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
     domain: binary_sensor
   condition: []
   action:
@@ -839,3 +894,111 @@
         device_id: aea80c457d793f16da9836a98e4e9cc7
         entity_id: switch.master_bathroom_fan_switch
         domain: switch
+- id: '1669750218117'
+  alias: Live Stream Setup [Manual Trigger]
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.master_bedroom_live_stream
+    metadata: {}
+  - service: lifx.effect_move
+    data:
+      speed: 45.1
+      theme: intense
+    target:
+      device_id:
+      - 7d3da82cc61061af25542b16321d89a3
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.bedroom_motion_sensor_state
+  - delay:
+      hours: 3
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.bedroom_motion_sensor_state
+  mode: restart
+- id: '1670518841363'
+  alias: Default Bedroom Setup [Manual Trigger]
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.bedroom_lights
+    metadata: {}
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.bedroom_motion_sensor_state
+  - service: lifx.effect_stop
+    data: {}
+    target:
+      area_id: master_bedroom
+  mode: restart
+- id: '1675456293038'
+  alias: Turn on humidifier if <35%
+  description: ''
+  trigger:
+  - type: humidity
+    platform: device
+    device_id: 1affbb39843799ce8a8e31386f0d2fa3
+    entity_id: sensor.bedroom_motion_sensor_humidity
+    domain: sensor
+    below: 40
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 057733e55a8a9036001f07ad0ee4f7fd
+    entity_id: switch.humidifier_plug_2
+    domain: switch
+  mode: single
+- id: '1675456356970'
+  alias: Turn off Humidifier if >35%
+  description: ''
+  trigger:
+  - type: humidity
+    platform: device
+    device_id: 1affbb39843799ce8a8e31386f0d2fa3
+    entity_id: sensor.bedroom_motion_sensor_humidity
+    domain: sensor
+    above: 40
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 057733e55a8a9036001f07ad0ee4f7fd
+    entity_id: switch.humidifier_plug_2
+    domain: switch
+  mode: single
+- id: '1682425241175'
+  alias: Fix Jake’s Idiocy
+  description: ''
+  trigger:
+  - platform: time
+    at: 03:30:00
+  condition:
+  - type: is_temperature
+    condition: device
+    device_id: 068eca0a9c57e6af533f9dd8c8d68cb4
+    entity_id: sensor.2927_n_lincoln_realfeel_temperature
+    domain: sensor
+    below: 60
+  action:
+  - device_id: c748b2188e9a6b95742d0edfe4f71308
+    domain: climate
+    entity_id: climate.my_ecobee_2
+    type: set_hvac_mode
+    hvac_mode: heat
+  - device_id: c748b2188e9a6b95742d0edfe4f71308
+    domain: button
+    entity_id: button.my_ecobee_clear_hold
+    type: press
+  mode: single

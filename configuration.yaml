@@ -5,6 +5,22 @@
 
 default_config:
 
+sensor:
+  - platform: time_date
+    display_options:
+      - "time"
+      - "date"
+      - "date_time"
+      - "date_time_utc"
+      - "date_time_iso"
+      - "time_date"
+      - "time_utc"
+
+binary_sensor:
+  - platform: workday
+    country: US
+    province: IL
+
 http:
   server_port: 8443 # Only 443, 2053, 2083, 2087, 2096, and 8443 are allowed through Cloudflare
   ssl_certificate: origin.pem
