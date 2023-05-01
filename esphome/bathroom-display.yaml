@@ -3,10 +3,14 @@ esphome:
   on_boot:
     priority: -180
     then:
+      - deep_sleep.prevent: deep_sleep_1
       - delay: 30s
       - component.update: oled_display
   includes:
-    - fonts/weather_icon_map.h
+    - fonts/bathroom_display_icon_maps.h
+
+deep_sleep:
+  id: deep_sleep_1
 
 external_components:
   - source:
@@ -278,12 +282,12 @@ display:
       } 
 
       // Indoor Temperature
-      it.printf(95, 232, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", "\U0000e846");
+      it.printf(95, 232, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["thermometer"].c_str());
       it.printf(101, 232, id(font_title), id(COLOR_BLK), TextAlign::CENTER_LEFT, "%.0f°F", id(bathroom_temperature).state);
-      it.printf(95, 286, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", "\U0000f87e");
+      it.printf(95, 286, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["humidity"].c_str());
       it.printf(101, 286, id(font_title), humitiyColor, TextAlign::CENTER_LEFT, "%.0f%%", id(shower_humidity).state);
       // Weight
-      it.printf(355, 228, id(material_icon_scale), id(COLOR_BLK), TextAlign::CENTER, "%s", "\U0000f039");
+      it.printf(355, 228, id(material_icon_scale), id(COLOR_BLK), TextAlign::CENTER, "%s", weight_icon_map["scale"].c_str());
       it.printf(355, 286, id(font_title), id(COLOR_BLK), TextAlign::CENTER, "%.1f lbs", id(current_weight).state);
       // it.print(355, 344, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "Last weigh-in:");
       // TODO: Date is in unix form. Need to convert to "Today", "Yesterday", or "x days ago"
@@ -294,18 +298,20 @@ display:
       it.printf(100, 370, id(font_weather_large), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_now).state.c_str()].c_str());
       it.printf(300, 370, id(font_large_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_now).state.c_str());
       // 4 Day Forecast
-      it.print(105, 504, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tod");
-      it.printf(105, 530, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_0).state.c_str()].c_str());
-      it.printf(105, 578, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_0).state.c_str());
-      it.print(195, 504, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tom");
-      it.printf(195, 530, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_1).state.c_str()].c_str());
-      it.printf(195, 578, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_1).state.c_str());
-      it.printf(285, 504, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_2).state.c_str());
-      it.printf(285, 530, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_2).state.c_str()].c_str());
-      it.printf(285, 578, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_2).state.c_str());
-      it.printf(375, 504, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_3).state.c_str());
-      it.printf(375, 530, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_3).state.c_str()].c_str());
-      it.printf(375, 578, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_3).state.c_str());
+      int day0_x = 105; int day1_x = 195; int day2_x = 285; int day3_x = 375;
+      int top_row = 504; int middle_row = 530; int bottom_row = 578;
+      it.print(day0_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tod");
+      it.printf(day0_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_0).state.c_str()].c_str());
+      it.printf(day0_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_0).state.c_str());
+      it.print(day1_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tom");
+      it.printf(day1_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_1).state.c_str()].c_str());
+      it.printf(day1_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_1).state.c_str());
+      it.printf(day2_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_2).state.c_str());
+      it.printf(day2_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_2).state.c_str()].c_str());
+      it.printf(day2_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_2).state.c_str());
+      it.printf(day3_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_3).state.c_str());
+      it.printf(day3_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_3).state.c_str()].c_str());
+      it.printf(day3_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_3).state.c_str());
 
       // Bottom Bar
       it.print(237, 740, id(font_small_bold), id(COLOR_BLK), TextAlign::BOTTOM_CENTER, "Extra toilet paper under the sink");
@@ -338,3 +344,4 @@ display:
       }
 
 captive_portal:
+  
