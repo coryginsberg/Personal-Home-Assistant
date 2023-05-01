@@ -111,7 +111,7 @@ font:
       "\U0000ebd6", # wifi-strength-2
       "\U0000ebe1", # wifi-strength-3
       "\U0000e1d8", # wifi-strength-4
-      "\U0000f067", # signal_wifi_statusbar_null
+      "\U0000f063", # signal_wifi_bad
     ]
     
 
@@ -332,7 +332,7 @@ display:
           ESP_LOGI("WiFi", "Weak");
         } else {
           // Unlikely working signal
-          it.print(wifi_x, wifi_y, id(material_icon_wifi), id(COLOR_RED), TextAlign::BOTTOM_RIGHT, "\U0000f067");
+          it.print(wifi_x, wifi_y, id(material_icon_wifi), id(COLOR_RED), TextAlign::BOTTOM_RIGHT, "\U0000f063");
           ESP_LOGI("WiFi", "Unlikely");
         }
       }
