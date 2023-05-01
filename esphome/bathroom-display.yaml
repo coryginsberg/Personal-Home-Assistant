@@ -3,14 +3,12 @@ esphome:
   on_boot:
     priority: -180
     then:
-      - deep_sleep.prevent: deep_sleep_1
       - delay: 30s
       - component.update: oled_display
   includes:
     - fonts/bathroom_display_icon_maps.h
-
-deep_sleep:
-  id: deep_sleep_1
+    - misc/calculate_time.h
+    - misc/calculate_time.cpp
 
 external_components:
   - source:
@@ -227,7 +225,8 @@ text_sensor:
     id: weather_timestamp_3
 
   - platform: homeassistant
-    entity_id: sensor.scale_last_record_date
+    entity_id: sensor.scale_cory_ginsberg_weight
+    attribute: entryTimestamp
     id: current_weight_date
 
 globals:
@@ -270,31 +269,48 @@ display:
     id: oled_display
     reset_duration: 2ms
     lambda: |-
+      // For typing, see .esphome/build/bathroom-display/src/main.cpp ~Line 4540
+      ESP_LOGI("Rendering", "Display");
       it.fill(id(COLOR_WHT));
       // Clock
       it.strftime(240, 105, id(font_time), id(COLOR_BLK), TextAlign::CENTER, "%I:%M %p", id(homeassistant_time).now());
       it.strftime(240, 158, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "%A, %B %d", id(homeassistant_time).now());
       
+      // Indoor Temperature
+      ESP_LOGI("Rendering", "Indoor Temperature");
       int humidity = id(shower_humidity).state;
       auto humitiyColor = id(COLOR_BLK);
       if (humidity > 65) {
         humitiyColor = id(COLOR_RED);
       } 
-
-      // Indoor Temperature
       it.printf(95, 232, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["thermometer"].c_str());
       it.printf(101, 232, id(font_title), id(COLOR_BLK), TextAlign::CENTER_LEFT, "%.0f°F", id(bathroom_temperature).state);
       it.printf(95, 286, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["humidity"].c_str());
       it.printf(101, 286, id(font_title), humitiyColor, TextAlign::CENTER_LEFT, "%.0f%%", id(shower_humidity).state);
+      
       // Weight
+      ESP_LOGI("Rendering", "Weight");
       it.printf(355, 228, id(material_icon_scale), id(COLOR_BLK), TextAlign::CENTER, "%s", weight_icon_map["scale"].c_str());
       it.printf(355, 286, id(font_title), id(COLOR_BLK), TextAlign::CENTER, "%.1f lbs", id(current_weight).state);
-      // it.print(355, 344, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "Last weigh-in:");
-      // TODO: Date is in unix form. Need to convert to "Today", "Yesterday", or "x days ago"
-      // TODO: If date is >3(?) make text red
-      // it.printf(355, 368, id(font_small_bold), id(COLOR_BLK), TextAlign::CENTER, "%s", id(current_weight_date).state.c_str());
+      it.print(355, 344, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "Last weigh-in:");
 
+      int days_since_x = 355;
+      int days_since_y = 368;
+      time_t days_since = days_since_unix(id(current_weight_date).state.c_str());
+      Color days_since_color = id(COLOR_BLK);
+      if (days_since >= 3) {
+        days_since_color = id(COLOR_RED);
+      }
+      if (days_since == 0) {
+        it.print(days_since_x, days_since_y, id(font_small_bold), days_since_color, TextAlign::CENTER, "Today");
+      } else if (days_since == 1) {
+        it.print(days_since_x, days_since_y, id(font_small_bold), days_since_color, TextAlign::CENTER, "Yesterday");
+      } else {
+        it.printf(days_since_x, days_since_y, id(font_small_bold), days_since_color, TextAlign::CENTER, "%li days ago", days_since);
+      }
+      
       // Current Weather
+      ESP_LOGI("Rendering", "Weather");
       it.printf(100, 370, id(font_weather_large), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_now).state.c_str()].c_str());
       it.printf(300, 370, id(font_large_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_now).state.c_str());
       // 4 Day Forecast
