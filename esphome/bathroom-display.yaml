@@ -116,47 +116,29 @@ font:
       "\U0000f063", # signal_wifi_bad
     ]
     
-
-  # Include Material Design Icons font
-  # Thanks to https://community.home-assistant.io/t/display-materialdesign-icons-on-esphome-attached-to-screen/199790/16
-  - file: 'fonts/materialdesignicons-webfont.ttf'
-    id: font_weather_large
+  - file:
+      type: "gfonts"
+      family: "Material Symbols Rounded"
+    id: material_icon_weather_large
     size: 96
-    glyphs: &mdi-weather-glyphs
-      - "\U000F0590" # mdi-weather-cloudy
-      - "\U000F0F2F" # mdi-weather-cloudy-alert
-      - "\U000F0E6E" # mdi-weather-cloudy-arrow-right
-      - "\U000F0591" # mdi-weather-fog
-      - "\U000F0592" # mdi-weather-hail
-      - "\U000F0F30" # mdi-weather-hazy
-      - "\U000F0898" # mdi-weather-hurricane
-      - "\U000F0593" # mdi-weather-lightning
-      - "\U000F067E" # mdi-weather-lightning-rainy
-      - "\U000F0594" # mdi-weather-night
-      - "\U000F0F31" # mdi-weather-night-partly-cloudy
-      - "\U000F0595" # mdi-weather-partly-cloudy
-      - "\U000F0F32" # mdi-weather-partly-lightning
-      - "\U000F0F33" # mdi-weather-partly-rainy
-      - "\U000F0F34" # mdi-weather-partly-snowy
-      - "\U000F0F35" # mdi-weather-partly-snowy-rainy
-      - "\U000F0596" # mdi-weather-pouring
-      - "\U000F0597" # mdi-weather-rainy
-      - "\U000F0598" # mdi-weather-snowy
-      - "\U000F0F36" # mdi-weather-snowy-heavy
-      - "\U000F067F" # mdi-weather-snowy-rainy
-      - "\U000F0599" # mdi-weather-sunny
-      - "\U000F0F37" # mdi-weather-sunny-alert
-      - "\U000F14E4" # mdi-weather-sunny-off
-      - "\U000F059A" # mdi-weather-sunset
-      - "\U000F059B" # mdi-weather-sunset-down
-      - "\U000F059C" # mdi-weather-sunset-up
-      - "\U000F0F38" # mdi-weather-tornado
-      - "\U000F059D" # mdi-weather-windy
-      - "\U000F059E" # mdi-weather-windy-variant
-  - file: 'fonts/materialdesignicons-webfont.ttf'
-    id: font_weather_medium
+    glyphs: &weather-glyphs
+      - "\U0000F157" # clear-day
+      - "\U0000F159" # clear-night
+      - "\U0000F15B" # cloudy
+      - "\U0000E188" # fog
+      - "\U0000F172" # partly-cloudy-day
+      - "\U0000F174" # partly-cloudy-night
+      - "\U0000F176" # rain
+      - "\U0000F60B" # sleet
+      - "\U0000E2CD" # snow
+      - "\U0000EFD8" # wind
+  
+  - file:
+      type: "gfonts"
+      family: "Material Symbols Outlined"
+    id: material_icon_weather
     size: 36
-    glyphs: *mdi-weather-glyphs
+    glyphs: *weather-glyphs
 
 sensor:    
   - platform: homeassistant
@@ -283,19 +265,19 @@ display:
       if (humidity > 65) {
         humitiyColor = id(COLOR_RED);
       } 
-      it.printf(95, 232, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["thermometer"].c_str());
-      it.printf(101, 232, id(font_title), id(COLOR_BLK), TextAlign::CENTER_LEFT, "%.0f°F", id(bathroom_temperature).state);
-      it.printf(95, 286, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["humidity"].c_str());
-      it.printf(101, 286, id(font_title), humitiyColor, TextAlign::CENTER_LEFT, "%.0f%%", id(shower_humidity).state);
+      it.printf(105, 262, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["thermometer"].c_str());
+      it.printf(111, 262, id(font_title), id(COLOR_BLK), TextAlign::CENTER_LEFT, "%.0f°F", id(bathroom_temperature).state);
+      it.printf(105, 316, id(material_icon_temp_hum), id(COLOR_BLK), TextAlign::CENTER_RIGHT, "%s", temperature_icon_map["humidity"].c_str());
+      it.printf(111, 316, id(font_title), humitiyColor, TextAlign::CENTER_LEFT, "%.0f%%", id(shower_humidity).state);
       
       // Weight
       ESP_LOGI("Rendering", "Weight");
       it.printf(355, 228, id(material_icon_scale), id(COLOR_BLK), TextAlign::CENTER, "%s", weight_icon_map["scale"].c_str());
       it.printf(355, 286, id(font_title), id(COLOR_BLK), TextAlign::CENTER, "%.1f lbs", id(current_weight).state);
-      it.print(355, 344, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "Last weigh-in:");
+      it.print(355, 320, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "Last weigh-in:");
 
       int days_since_x = 355;
-      int days_since_y = 368;
+      int days_since_y = 344;
       time_t days_since = days_since_unix(id(current_weight_date).state.c_str());
       Color days_since_color = id(COLOR_BLK);
       if (days_since >= 3) {
@@ -311,31 +293,32 @@ display:
       
       // Current Weather
       ESP_LOGI("Rendering", "Weather");
-      it.printf(100, 370, id(font_weather_large), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_now).state.c_str()].c_str());
-      it.printf(300, 370, id(font_large_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_now).state.c_str());
+      ESP_LOGD("Weather Icon", id(weather_condition_now).state.c_str());
+      it.printf(125, 420, id(material_icon_weather_large), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_now).state.c_str()].c_str());
+      it.printf(300, 420, id(font_large_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_now).state.c_str());
       // 4 Day Forecast
       int day0_x = 105; int day1_x = 195; int day2_x = 285; int day3_x = 375;
-      int top_row = 504; int middle_row = 530; int bottom_row = 578;
+      int top_row = 554; int middle_row = 580; int bottom_row = 628;
       it.print(day0_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tod");
-      it.printf(day0_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_0).state.c_str()].c_str());
+      it.printf(day0_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_0).state.c_str()].c_str());
       it.printf(day0_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_0).state.c_str());
       it.print(day1_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tom");
-      it.printf(day1_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_1).state.c_str()].c_str());
+      it.printf(day1_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_1).state.c_str()].c_str());
       it.printf(day1_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_1).state.c_str());
-      it.printf(day2_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_2).state.c_str());
-      it.printf(day2_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_2).state.c_str()].c_str());
+      it.print(day2_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "2 Days");
+      it.printf(day2_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_2).state.c_str()].c_str());
       it.printf(day2_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_2).state.c_str());
-      it.printf(day3_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_3).state.c_str());
-      it.printf(day3_x, middle_row, id(font_weather_medium), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_3).state.c_str()].c_str());
+      it.print(day3_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "3 Days");
+      it.printf(day3_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_3).state.c_str()].c_str());
       it.printf(day3_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_3).state.c_str());
 
       // Bottom Bar
-      it.print(237, 740, id(font_small_bold), id(COLOR_BLK), TextAlign::BOTTOM_CENTER, "Extra toilet paper under the sink");
+      it.print(237, 780, id(font_small_bold), id(COLOR_BLK), TextAlign::BOTTOM_CENTER, "Extra toilet paper under the sink");
 
       /* WIFI SIGNAL */ 
       if(id(wifisignal).has_state()) {
         int wifi_x = 474;
-        int wifi_y = 748;
+        int wifi_y = 788;
         if (id(wifisignal).state >= -50) {
           // Excellent
           it.print(wifi_x, wifi_y, id(material_icon_wifi), id(COLOR_BLK), TextAlign::BOTTOM_RIGHT, "\U0000ebe4");
