@@ -1,10 +1,13 @@
 esphome:
-  name: bathroom-display
+  name: epaper-display
+  friendly_name: epaper-display
   on_boot:
     priority: -180
     then:
       - delay: 30s
       - component.update: oled_display
+      - delay: 25s
+      - switch.turn_on: enable_pin
   includes:
     - fonts/bathroom_display_icon_maps.h
     - misc/calculate_time.h
@@ -28,10 +31,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "NUjXtvg26Ev8ksluZ11jPcTidj70zLLzvkE2v4Zu75g="
+    key: "zLZdpxAEYNe8ACRVBr1F+DbH4Ul+8qbeLgToLZFtWIk="
 
 ota:
-  password: "8b20cc37026ccbb518e2776009a2a030"
+  password: "cdad1d0a1255a63260c387d47e2dda7e"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -39,10 +42,9 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Bathroom-Display"
-    password: "Ae8ZYlYqiXpG"
+    ssid: "Epaper-Display Fallback Hotspot"
+    password: "Xfihow7nWWNu"
 
-# Example configuration entry
 time:
   - platform: homeassistant
     id: homeassistant_time
@@ -51,9 +53,7 @@ time:
         minutes: /15
         then:
           - component.update: oled_display
-      
 
-# Include custom fonts
 font:
   - file:
       type: "gfonts"
@@ -158,36 +158,53 @@ sensor:
     id: shower_humidity
 
 text_sensor:
+  # Late Weigh-in Date
+  - platform: homeassistant
+    entity_id: sensor.scale_last_record_date
+    id: last_recorded_weigh_in
+
   # Current
   - platform: homeassistant
-    entity_id: sensor.pirateweather_temperature
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_now
     id: weather_temperature_now
   - platform: homeassistant
-    entity_id: sensor.pirateweather_icon
+    entity_id: sensor.weather_data
+    attribute: weather_condition_now
     id: weather_condition_now
 
   # Today
   - platform: homeassistant
-    entity_id: sensor.pirateweather_icon_0d
+    entity_id: sensor.weather_data
+    attribute: weather_condition_0
     id: weather_condition_0
   - platform: homeassistant
-    entity_id: sensor.pirateweather_daytime_high_temperature_0d
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_0
     id: weather_temperature_0
 
   # Tomorrow
   - platform: homeassistant
-    entity_id: sensor.pirateweather_icon_1d
+    entity_id: sensor.weather_data
+    attribute: weather_condition_1
     id: weather_condition_1
   - platform: homeassistant
-    entity_id: sensor.pirateweather_daytime_high_temperature_1d
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_1
     id: weather_temperature_1
+  - platform: homeassistant
+    entity_id: sensor.weather_data
+    attribute: weather_timestamp_1
+    id: weather_timestamp_1
 
   # 2 Days
   - platform: homeassistant
-    entity_id: sensor.pirateweather_icon_2d
+    entity_id: sensor.weather_data
+    attribute: weather_condition_2
     id: weather_condition_2
   - platform: homeassistant
-    entity_id: sensor.pirateweather_daytime_high_temperature_2d
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_2
     id: weather_temperature_2
   - platform: homeassistant
     entity_id: sensor.weather_data
@@ -196,10 +213,12 @@ text_sensor:
 
   # 3 Days
   - platform: homeassistant
-    entity_id: sensor.pirateweather_icon_3d
+    entity_id: sensor.weather_data
+    attribute: weather_condition_3
     id: weather_condition_3
   - platform: homeassistant
-    entity_id: sensor.pirateweather_daytime_high_temperature_3d
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_3
     id: weather_temperature_3
   - platform: homeassistant
     entity_id: sensor.weather_data
@@ -211,6 +230,12 @@ text_sensor:
     attribute: entryTimestamp
     id: current_weight_date
 
+switch: 
+  - platform: gpio
+    name: "Enable Pin"
+    id: enable_pin
+    pin: 32
+  
 globals:
   - id: signal_strength_var
     type: std::string
@@ -226,7 +251,7 @@ color:
     green: 0%
     blue: 0%
     white: 0%
-  # inverted again because of external_component waveshare_epaper https://github.com/guardmedia/esphome.git
+  # inverted because of external_component waveshare_epaper https://github.com/guardmedia/esphome.git
   - id: COLOR_BLK
     red: 0%
     green: 0%
@@ -247,17 +272,16 @@ display:
     reset_pin: 26
     model: 7.50in-bV2
     update_interval: never
-    rotation: 90°
+    rotation: 270
     id: oled_display
-    reset_duration: 2ms
     lambda: |-
       // For typing, see .esphome/build/bathroom-display/src/main.cpp ~Line 4540
       ESP_LOGI("Rendering", "Display");
       it.fill(id(COLOR_WHT));
       // Clock
-      it.strftime(240, 105, id(font_time), id(COLOR_BLK), TextAlign::CENTER, "%I:%M %p", id(homeassistant_time).now());
-      it.strftime(240, 158, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "%A, %B %d", id(homeassistant_time).now());
-      
+      it.strftime(240, 100, id(font_time), id(COLOR_BLK), TextAlign::CENTER, "%I:%M %p", id(homeassistant_time).now());
+      it.strftime(240, 153, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "%A, %B %d", id(homeassistant_time).now());
+    
       // Indoor Temperature
       ESP_LOGI("Rendering", "Indoor Temperature");
       int humidity = id(shower_humidity).state;
@@ -275,22 +299,13 @@ display:
       it.printf(355, 228, id(material_icon_scale), id(COLOR_BLK), TextAlign::CENTER, "%s", weight_icon_map["scale"].c_str());
       it.printf(355, 286, id(font_title), id(COLOR_BLK), TextAlign::CENTER, "%.1f lbs", id(current_weight).state);
       it.print(355, 320, id(font_light), id(COLOR_BLK), TextAlign::CENTER, "Last weigh-in:");
-
-      int days_since_x = 355;
-      int days_since_y = 344;
       time_t days_since = days_since_unix(id(current_weight_date).state.c_str());
       Color days_since_color = id(COLOR_BLK);
-      if (days_since >= 3) {
+      if (days_since > 2) {
         days_since_color = id(COLOR_RED);
       }
-      if (days_since == 0) {
-        it.print(days_since_x, days_since_y, id(font_small_bold), days_since_color, TextAlign::CENTER, "Today");
-      } else if (days_since == 1) {
-        it.print(days_since_x, days_since_y, id(font_small_bold), days_since_color, TextAlign::CENTER, "Yesterday");
-      } else {
-        it.printf(days_since_x, days_since_y, id(font_small_bold), days_since_color, TextAlign::CENTER, "%li days ago", days_since);
-      }
-      
+      it.print(355, 344, id(font_small_bold), days_since_color, TextAlign::CENTER, id(last_recorded_weigh_in).state.c_str());
+
       // Current Weather
       ESP_LOGI("Rendering", "Weather");
       ESP_LOGD("Weather Icon", id(weather_condition_now).state.c_str());
@@ -302,13 +317,13 @@ display:
       it.print(day0_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tod");
       it.printf(day0_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_0).state.c_str()].c_str());
       it.printf(day0_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_0).state.c_str());
-      it.print(day1_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "Tom");
+      it.printf(day1_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_timestamp_1).state.c_str());
       it.printf(day1_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_1).state.c_str()].c_str());
       it.printf(day1_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_1).state.c_str());
-      it.print(day2_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "2 Days");
+      it.printf(day2_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_2).state.c_str());
       it.printf(day2_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_2).state.c_str()].c_str());
       it.printf(day2_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_2).state.c_str());
-      it.print(day3_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "3 Days");
+      it.printf(day3_x, top_row, id(font_light), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", id(weather_timestamp_3).state.c_str());
       it.printf(day3_x, middle_row, id(material_icon_weather), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_3).state.c_str()].c_str());
       it.printf(day3_x, bottom_row, id(font_small_bold), id(COLOR_BLK), TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_3).state.c_str());
 
@@ -317,7 +332,7 @@ display:
 
       /* WIFI SIGNAL */ 
       if(id(wifisignal).has_state()) {
-        int wifi_x = 474;
+        int wifi_x = 466;
         int wifi_y = 788;
         if (id(wifisignal).state >= -50) {
           // Excellent
@@ -343,4 +358,4 @@ display:
       }
 
 captive_portal:
-  
+    

@@ -459,20 +459,22 @@
       supported_color_modes:
       - color_temp
       - hs
-      color_mode: hs
-      brightness: 153
+      color_mode: color_temp
+      brightness: 76
       hs_color:
-      - 31.998
-      - 100
+      - 28.185
+      - 62.588
       rgb_color:
       - 255
-      - 135
-      - 0
+      - 170
+      - 95
       xy_color:
-      - 0.602
-      - 0.383
+      - 0.516
+      - 0.386
       friendly_name: Bed Frame
       supported_features: 36
+      color_temp_kelvin: 2801
+      color_temp: 357
       state: 'on'
     light.hue_color_lamp_1:
       min_color_temp_kelvin: 2000
@@ -487,7 +489,7 @@
       - color_temp
       - xy
       color_mode: color_temp
-      brightness: 191
+      brightness: 153
       color_temp_kelvin: 2000
       color_temp: 500
       hs_color:
@@ -520,7 +522,7 @@
       - color_temp
       - xy
       color_mode: color_temp
-      brightness: 191
+      brightness: 153
       color_temp_kelvin: 2000
       color_temp: 500
       hs_color:
@@ -553,19 +555,19 @@
       - color_temp
       - xy
       color_mode: color_temp
-      brightness: 191
-      color_temp_kelvin: 2000
-      color_temp: 500
+      brightness: 153
+      color_temp_kelvin: 2079
+      color_temp: 481
       hs_color:
-      - 30.601
-      - 94.547
+      - 30.261
+      - 90.417
       rgb_color:
       - 255
-      - 136
-      - 13
+      - 140
+      - 24
       xy_color:
-      - 0.599
-      - 0.382
+      - 0.592
+      - 0.385
       effect: None
       mode: normal
       dynamics: none
@@ -592,21 +594,21 @@
       color_mode: hs
       brightness: 26
       hs_color:
-      - 38.118
+      - 39.996
       - 100
       rgb_color:
       - 255
-      - 162
+      - 169
       - 0
       xy_color:
-      - 0.566
-      - 0.413
+      - 0.557
+      - 0.421
       effect: effect_move
       friendly_name: Record Shelf
       supported_features: 36
       state: 'on'
     switch.adaptive_lighting_sleep_mode_bedroom:
-      icon: mdi:theme-light-dark
+      icon: mdi:sleep
       friendly_name: 'Adaptive Lighting Sleep Mode: Bedroom'
       state: 'on'
     light.desk_lightstrip:
@@ -618,17 +620,17 @@
       - color_temp
       - xy
       color_mode: xy
-      brightness: 3
+      brightness: 26
       hs_color:
-      - 38.182
-      - 99.216
+      - 34.404
+      - 85.49
       rgb_color:
       - 255
-      - 163
-      - 2
+      - 162
+      - 37
       xy_color:
-      - 0.566
-      - 0.413
+      - 0.561
+      - 0.4063
       mode: normal
       dynamics: none
       icon: mdi:led-strip-variant
@@ -649,7 +651,7 @@
       - color_temp
       - hs
       color_mode: hs
-      brightness: 26
+      brightness: 48
       hs_color:
       - 38.118
       - 100
@@ -663,19 +665,13 @@
       friendly_name: Computer Shelf
       supported_features: 36
       state: 'on'
-    switch.adaptive_lighting_sleep_mode_bed_frame:
-      icon: mdi:theme-light-dark
-      friendly_name: 'Adaptive Lighting Sleep Mode: Bed Frame'
-      state: 'on'
     switch.adaptive_lighting_sleep_mode_desk:
-      icon: mdi:theme-light-dark
+      icon: mdi:sleep
       friendly_name: 'Adaptive Lighting Sleep Mode: Desk'
       state: 'on'
   icon: mdi:book-open-page-variant
   metadata:
     switch.adaptive_lighting_sleep_mode_bedroom:
-      entity_only: true
-    switch.adaptive_lighting_sleep_mode_bed_frame:
       entity_only: true
     switch.adaptive_lighting_sleep_mode_desk:
       entity_only: true

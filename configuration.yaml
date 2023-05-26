@@ -16,11 +16,6 @@ sensor:
       - "time_date"
       - "time_utc"
 
-binary_sensor:
-  - platform: workday
-    country: US
-    province: IL
-
 http:
   server_port: 8443 # Only 443, 2053, 2083, 2087, 2096, and 8443 are allowed through Cloudflare
   ssl_certificate: origin.pem
@@ -53,14 +48,13 @@ template:
         state: >
           {% set timestamp = state_attr('sensor.scale_cory_ginsberg_weight', 'entryTimestamp') %}
           {% set currentTime = now() %}
-          {% set daysSince = currentTime.day - timestamp.day %}
-          {{daysSince}}
-          {% if daysSince == 0 %}
+          {% set daysSince = currentTime - timestamp %}
+          {% if daysSince.days == 0 %}
             Today 
-          {% elif daysSince == 1 %}
+          {% elif daysSince.days == 1 %}
             Yesterday
           {% else %}
-            {{daysSince}} days ago
+            {{daysSince.days}} days ago
           {% endif %}
 
   - trigger:

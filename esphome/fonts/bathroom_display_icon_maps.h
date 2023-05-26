@@ -14,12 +14,12 @@ std::map<std::string, std::string> weight_icon_map {
 
 // NOLINTNEXTLINE
 std::map<std::string, std::string> weather_icon_map {
-  {"clear-day", "\U0000F157"},
-  {"clear-night", "\U0000F159"},
+  {"sunny", "\U0000F157"},
+  {"clear", "\U0000F159"},
   {"cloudy", "\U0000F15B"},
   {"fog", "\U0000E188"},
-  {"partly-cloudy-day", "\U0000F172"},
-  {"partly-cloudy-night", "\U0000F174"},
+  {"partlycloudy", "\U0000F172"},
+  {"partlycloudy-night", "\U0000F174"},
   {"rain", "\U0000F176"},
   {"sleet", "\U0000F60B"},
   {"snow", "\U0000E2CD"},
