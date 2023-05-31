@@ -166,7 +166,7 @@ sensor:
 text_sensor:
   # Late Weigh-in Date
   - platform: homeassistant
-    entity_id: sensor.scale_last_record_date
+    entity_id: sensor.last_recorded_weigh_in
     id: last_recorded_weigh_in
 
   # Current

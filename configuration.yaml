@@ -34,22 +34,14 @@ api:
 automation: !include automations.yaml
 scene: !include scenes.yaml
 
-homeassistant:
-  customize: !include customize.yaml
-
-# Bundle up all the data to send over to Weatherman.
 template:
   - trigger:
       platform: state
       entity_id:
         - sensor.scale_cory_ginsberg_weight
     sensor:
-      - name: scale_last_record_date
-        state: >
-          {% set timestamp = state_attr('sensor.scale_cory_ginsberg_weight', 'entryTimestamp') %}
-          {% set currentTime = now() %}
-          {% set daysSince = currentTime - timestamp %}
-          {{daysSince.days}} days ago
+      - name: Last Recorded Weigh In
+        state: "{{ relative_time(state_attr('sensor.scale_cory_ginsberg_weight', 'entryTimestamp')) }} ago"
 
   - trigger:
       platform: state
