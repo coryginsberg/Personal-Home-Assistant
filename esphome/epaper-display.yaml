@@ -122,16 +122,22 @@ font:
     id: material_icon_weather_large
     size: 96
     glyphs: &weather-glyphs
-      - "\U0000F157" # clear-day
+      - "\U0000F157" # clear
       - "\U0000F159" # clear-night
       - "\U0000F15B" # cloudy
+      - "\U0000E645" # exceptional
       - "\U0000E188" # fog
-      - "\U0000F172" # partly-cloudy-day
-      - "\U0000F174" # partly-cloudy-night
-      - "\U0000F176" # rain
-      - "\U0000F60B" # sleet
-      - "\U0000E2CD" # snow
-      - "\U0000EFD8" # wind
+      - "\U0000F67F" # hail
+      - "\U0000EC1C" # lightning
+      - "\U0000EBDB" # lightning-rainy
+      - "\U0000F172" # partlycloudy
+      - "\U0000F61F" # pouring
+      - "\U0000F176" # rainy
+      - "\U0000E2CD" # snowy
+      - "\U0000F61D" # snowy-rainy
+      - "\U0000E81A" # sunny
+      - "\U0000EFD8" # windy
+      - "\U0000EC0C" # windy-variant
   
   - file:
       type: "gfonts"

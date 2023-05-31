@@ -49,13 +49,7 @@ template:
           {% set timestamp = state_attr('sensor.scale_cory_ginsberg_weight', 'entryTimestamp') %}
           {% set currentTime = now() %}
           {% set daysSince = currentTime - timestamp %}
-          {% if daysSince.days == 0 %}
-            Today 
-          {% elif daysSince.days == 1 %}
-            Yesterday
-          {% else %}
-            {{daysSince.days}} days ago
-          {% endif %}
+          {{daysSince.days}} days ago
 
   - trigger:
       platform: state
