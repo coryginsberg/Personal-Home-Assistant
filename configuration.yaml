@@ -1,7 +1,4 @@
 # Configure a default setup of Home Assistant (frontend, api, etc)
-#
-# Add to server by running the following script:
-# `scp {path/to/configuration.yaml} root@192.168.1.238:/config`
 
 default_config:
 
@@ -36,9 +33,12 @@ scene: !include scenes.yaml
 
 template:
   - trigger:
-      platform: state
-      entity_id:
-        - sensor.scale_cory_ginsberg_weight
+      - platform: state
+        entity_id:
+          - sensor.scale_cory_ginsberg_weight
+      - platform: time_pattern
+        minutes: "/5"
+
     sensor:
       - name: Last Recorded Weigh In
         state: "{{ relative_time(state_attr('sensor.scale_cory_ginsberg_weight', 'entryTimestamp')) }} ago"

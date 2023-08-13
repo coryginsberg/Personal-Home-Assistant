@@ -1,5 +1,86 @@
-- id: '1647919992355'
-  alias: Pico Remote Bed Frame
+- id: '1691712571143'
+  alias: Send a notification when internet speeds are low
+  description: ''
+  trigger:
+  - type: value
+    platform: device
+    device_id: 9e3cf823320a365ecfe5179c057f3fa5
+    entity_id: c0c6838cb9c77437e09e6da2f2cae91d
+    domain: sensor
+    below: 100
+  - type: value
+    platform: device
+    device_id: 9e3cf823320a365ecfe5179c057f3fa5
+    entity_id: d4541f2be787dd28dd145186c1996ba9
+    domain: sensor
+    below: 10
+  condition: []
+  action:
+  - device_id: cbb12a2c31fd10894350f2bc201ef429
+    domain: mobile_app
+    type: notify
+    message: The{% set download_state = states('sensor.speedtest_download')%}{% set
+      upload_state = states('sensor.speedtest_upload') %}{% if is_number(download_state)
+      and download_state | float < 25 %} download speed for the last speed test was
+      {{download_state}}Mbps. {% else %} upload speed for the last speed test was
+      {{upload_state}}Mbps.  {% endif %}
+    title: Slow Internet Speed
+  mode: single
+- id: '1691712766126'
+  alias: Turn off Humidifier if >35%
+  description: ''
+  trigger:
+  - type: humidity
+    platform: device
+    device_id: 1affbb39843799ce8a8e31386f0d2fa3
+    entity_id: sensor.bedroom_motion_sensor_humidity
+    domain: sensor
+    above: 40
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 057733e55a8a9036001f07ad0ee4f7fd
+    entity_id: switch.humidifier_plug_2
+    domain: switch
+  mode: single
+- id: '1691712783271'
+  alias: Turn on humidifier if <35%
+  description: ''
+  trigger:
+  - type: humidity
+    platform: device
+    device_id: 1affbb39843799ce8a8e31386f0d2fa3
+    entity_id: sensor.bedroom_motion_sensor_humidity
+    domain: sensor
+    below: 40
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 057733e55a8a9036001f07ad0ee4f7fd
+    entity_id: switch.humidifier_plug_2
+    domain: switch
+  mode: single
+- id: '1691712802022'
+  alias: Default Bedroom Setup [Manual Trigger]
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.bedroom_lights
+    metadata: {}
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.bedroom_motion_sensor_state
+  - service: lifx.effect_stop
+    data: {}
+    target:
+      area_id: master_bedroom
+  mode: restart
+- id: '1691712880929'
+  alias: Pico Remote In-Wall
   description: ''
   use_blueprint:
     path: stephack/core-pico.yaml
@@ -43,61 +124,40 @@
         data: {}
         target:
           entity_id: input_boolean.bedroom_motion_sensor_state
-      pico_remote: ec8d265c284bed9b46e51f0e1d6b7a84
+      pico_remote: 10efdd0ec4f1be2841b5382409d4cb14
       mode_max: 8
       middle_stop:
       - service: scene.turn_on
         target:
           entity_id: scene.master_bedroom_reading
         metadata: {}
-      - service: media_player.media_play_pause
+      - delay:
+          hours: 1
+          minutes: 0
+          seconds: 0
+          milliseconds: 0
+      - service: input_boolean.turn_on
         data: {}
         target:
-          entity_id: media_player.bedroom_sonos
-      - if:
-        - condition: device
-          device_id: 62b4389f3b5b909f36ce07fe53905f01
-          domain: media_player
-          entity_id: media_player.bedroom_sonos
-          type: is_playing
-        then:
-        - service: media_player.media_stop
-          data: {}
-          target:
-            entity_id: media_player.bedroom_sonos
-        else:
-        - service: media_player.play_media
-          target:
-            entity_id: media_player.bedroom_sonos
-          data:
-            media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/spotify:playlist:5FmmxErJczcrEwIFGIviYo
-            media_content_type: spotify://playlist
-          metadata:
-            title: lofi hip hop music - beats to sleep/chill to
-            thumbnail: https://i.scdn.co/image/ab67706c0000bebb00160fc063fe17f7d9c84df6
-            media_class: playlist
-            children_media_class: track
-            navigateIds:
-            - {}
-            - media_content_type: spotify://library
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d
-            - media_content_type: spotify://current_user_playlists
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/current_user_playlists
-            - media_content_type: spotify://playlist
-              media_content_id: spotify://77458355cf6b9547124dbdfd5b24ea7d/spotify:playlist:5FmmxErJczcrEwIFGIviYo
+          entity_id: input_boolean.bedroom_motion_sensor_state
       down_lower:
       - service: media_player.volume_down
         data: {}
         target:
           entity_id: media_player.bedroom_sonos
-      middle_stop_release: []
+      middle_stop_release:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.bedroom_motion_sensor_state
       up_raise:
       - service: media_player.volume_up
         data: {}
         target:
           entity_id: media_player.bedroom_sonos
       bottom_off_release: []
-- id: '1647920016422'
+      up_raise_release: []
+- id: '1691712964071'
   alias: Pico Remote Bed Frame
   description: ''
   use_blueprint:
@@ -251,92 +311,7 @@
         data: {}
         target:
           entity_id: input_boolean.is_pico_down_held
-- id: '1648172536134'
-  alias: Auto Bathroom Fan with Humidity
-  description: ''
-  initial_state: 'on'
-  use_blueprint:
-    path: dondochaka/turn-a-fan-on-and-off-based-on-the-difference-between-a-humidity-sensor-and-a-baseline.yaml
-    input:
-      humidity_sensor: sensor.shower_humidity_sensor_humidity
-      reference_humidity_sensor: sensor.my_ecobee_humidity
-      fan_switch: switch.master_bathroom_fan_switch
-      falling_threshold: 20
-      rising_threshold: 20
-      reference_humidity: '50'
-- id: '1648183032089'
-  alias: Master Bathroom Motion Lights
-  description: ''
-  use_blueprint:
-    path: homeassistant/motion_light.yaml
-    input:
-      motion_entity: binary_sensor.lumi_lumi_sensor_motion_aq2_ias_zone
-      light_target:
-        area_id: master_bathroom
-      no_motion_wait: 7200
-- id: '1648183323476'
-  alias: New Automation
-  description: ''
-  trigger:
-  - type: occupied
-    platform: device
-    device_id: 3739f694a0054133a3b5a94c62b48016
-    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_occupancy
-    domain: binary_sensor
-  condition:
-  - condition: device
-    type: is_on
-    device_id: c7d139ca4f2bd3757682d96fd4a076c7
-    entity_id: light.hue_white_lamp_1
-    domain: light
-  - condition: device
-    device_id: cb8ccd94d6506f4e965763ba5f46434a
-    domain: device_tracker
-    entity_id: device_tracker.corys_iphone
-    type: is_home
-  action:
-  - type: turn_on
-    device_id: 9df9f6c6cce4dd4e50e9c4b0a868daaa
-    entity_id: light.master_bathroom_main_lights
-    domain: light
-  - type: turn_on
-    device_id: 6c2ca36f71c30e4e39119e1804ade125
-    entity_id: light.master_bathroom_shower_lights
-    domain: light
-  mode: restart
-- id: '1648183323620'
-  alias: New Automation
-  description: ''
-  trigger:
-  - type: occupied
-    platform: device
-    device_id: 3739f694a0054133a3b5a94c62b48016
-    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_occupancy
-    domain: binary_sensor
-  condition:
-  - condition: device
-    type: is_on
-    device_id: c7d139ca4f2bd3757682d96fd4a076c7
-    entity_id: light.hue_white_lamp_1
-    domain: light
-  - condition: device
-    device_id: cb8ccd94d6506f4e965763ba5f46434a
-    domain: device_tracker
-    entity_id: device_tracker.corys_iphone
-    type: is_home
-  action:
-  - type: turn_on
-    device_id: 9df9f6c6cce4dd4e50e9c4b0a868daaa
-    entity_id: light.master_bathroom_main_lights
-    domain: light
-    brightness_pct: 100
-  - type: turn_on
-    device_id: 6c2ca36f71c30e4e39119e1804ade125
-    entity_id: light.master_bathroom_shower_lights
-    domain: light
-    brightness_pct: 100
-  mode: restart
-- id: '1648225285936'
+- id: '1691713834866'
   alias: Motion Sensing Master Bathroom Lights
   description: ''
   trigger:
@@ -346,88 +321,11 @@
     entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone
     domain: binary_sensor
   condition:
-  - condition: time
-    after: 07:30:00
-    before: '23:30:00'
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-    - sat
-    - sun
-  action:
-  - type: turn_on
-    device_id: b0857a3f898f4343b9724b3eae4c52bf
-    entity_id: switch.master_bathroom_light_switch
-    domain: switch
-  - delay:
-      hours: 0
-      minutes: 30
-      seconds: 0
-      milliseconds: 0
-  - type: turn_off
-    device_id: b0857a3f898f4343b9724b3eae4c52bf
-    entity_id: switch.master_bathroom_light_switch
-    domain: switch
-  mode: restart
-- id: '1648225535233'
-  alias: Master Bathroom Lights Auto Off
-  description: ''
-  trigger:
-  - type: not_occupied
-    platform: device
-    device_id: 3739f694a0054133a3b5a94c62b48016
-    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_110e9007_occupancy
-    domain: binary_sensor
-    for:
-      hours: 1
-      minutes: 0
-      seconds: 0
-  condition:
-  - condition: or
-    conditions:
-    - condition: device
-      type: is_on
-      device_id: 9df9f6c6cce4dd4e50e9c4b0a868daaa
-      entity_id: light.master_bathroom_main_lights
-      domain: light
-    - condition: device
-      type: is_on
-      device_id: 6c2ca36f71c30e4e39119e1804ade125
-      entity_id: light.master_bathroom_shower_lights
-      domain: light
-  action:
-  - type: turn_off
-    device_id: 9df9f6c6cce4dd4e50e9c4b0a868daaa
-    entity_id: light.master_bathroom_main_lights
-    domain: light
-  - type: turn_off
-    device_id: 6c2ca36f71c30e4e39119e1804ade125
-    entity_id: light.master_bathroom_shower_lights
-    domain: light
-  mode: single
-- id: '1648227449398'
-  alias: Turn off motion sensor at night
-  description: ''
-  trigger:
-  - platform: device
-    device_id: ec8d265c284bed9b46e51f0e1d6b7a84
-    domain: lutron_caseta
-    type: press
-    subtype: 'off'
-  - platform: device
-    device_id: ec8d265c284bed9b46e51f0e1d6b7a84
-    domain: lutron_caseta
-    type: press
-    subtype: 'off'
-  condition:
   - condition: or
     conditions:
     - condition: time
-      before: 07:00:00
-      after: '23:00:00'
+      after: 07:30:00
+      before: '23:30:00'
       weekday:
       - mon
       - tue
@@ -435,66 +333,34 @@
       - thu
       - fri
     - condition: time
-      before: '10:00:00'
-      after: '23:30:00'
+      after: 09:00:00
+      before: '23:30:00'
       weekday:
       - sat
       - sun
   action:
-  - type: turn_off
-    device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-    entity_id: switch.hue_motion_sensor_1_motion
-    domain: switch
-  mode: single
-- id: '1648227884130'
-  alias: Turn on Motion Sensor in the morning
-  description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /30
-  condition:
-  - condition: time
-    before: 00:00:00
-    after: 07:30:00
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-  - condition: time
-    before: 00:00:00
-    after: '10:00:00'
-    weekday:
-    - sat
-    - sun
-  action:
   - type: turn_on
-    device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-    entity_id: switch.hue_motion_sensor_1_motion
+    device_id: 7c6329880ab1433cca04846f548362e2
+    entity_id: 44c2df0875c99ab1ce626a885fdbd786
     domain: switch
-  mode: single
-- id: '1652371677138'
-  alias: Humidity Management based on abs. humidity (g/m3)
-  description: ''
-  use_blueprint:
-    path: W6Es3QEa/switch-a-fan-based-on-absolute-humidity-differnece-between-two-humid-temp-sensors.yaml
-    input:
-      humidity_sensor: sensor.lumi_lumi_weather_351e0b07_humidity
-      temperature_sensor: temperature
-      reference_humidity_sensor: sensor.my_ecobee_humidity
-      reference_temperature_sensor: sensor.living_room_temperature
-      fan_switch: switch.master_bathroom_exhaust_fan
-      rising_threshold: 1.1
-      falling_threshold: 0.8
-- id: '1654108471865'
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: 7c6329880ab1433cca04846f548362e2
+    entity_id: 44c2df0875c99ab1ce626a885fdbd786
+    domain: switch
+  mode: restart
+- id: '1691714153040'
   alias: Motion Sensing Master Bedroom Lights
   description: ''
   trigger:
   - type: motion
     platform: device
-    device_id: 1affbb39843799ce8a8e31386f0d2fa3
-    entity_id: binary_sensor.bedroom_motion_sensor_home_security_motion_detection
+    device_id: 9a75ed459178d9f05f7b9e5dfcc80f9a
+    entity_id: e455c1c102679d727f5d5fc276731564
     domain: binary_sensor
   condition:
   - condition: and
@@ -541,16 +407,32 @@
         device_id: 7d3da82cc61061af25542b16321d89a3
         entity_id: light.record_shelf
         domain: light
+      - condition: device
+        type: is_off
+        device_id: 52f153663ddaca7d191c07f58526aee6
+        entity_id: e8a3258910734dc66dbc88942144234b
+        domain: light
   action:
   - service: scene.turn_on
     target:
       entity_id: scene.bedroom_lights
     metadata: {}
+  - service: adaptive_lighting.apply
+    data:
+      lights:
+      - light.bed_frame
+      - light.computer_shelf
+      - light.desk_lightstrip
+      - light.record_shelf
+      adapt_color: true
+      prefer_rgb_color: true
+      turn_on_lights: true
+      adapt_brightness: true
   - if:
     - type: is_no_motion
       condition: device
-      device_id: 1affbb39843799ce8a8e31386f0d2fa3
-      entity_id: binary_sensor.bedroom_motion_sensor_home_security_motion_detection
+      device_id: aea80c457d793f16da9836a98e4e9cc7
+      entity_id: bc373e13e264a70b02d75014b0dd0210
       domain: binary_sensor
       for:
         hours: 1
@@ -561,25 +443,22 @@
       target:
         entity_id: scene.new_scene
       metadata: {}
-  - service: adaptive_lighting.apply
-    data:
-      entity_id: light.desk
   mode: restart
-- id: '1654627625747'
+- id: '1691714478126'
   alias: Turn lights off when I leave
   description: ''
   trigger:
   - platform: device
     device_id: 5ed4cc4b65ea1e76aea4bfbb88f98cd6
     domain: device_tracker
-    entity_id: device_tracker.corys_iphone_6
+    entity_id: d76835ff89503dbe69592e5b082362c3
     type: leaves
     zone: zone.home
   condition:
   - type: is_no_motion
     condition: device
-    device_id: 1affbb39843799ce8a8e31386f0d2fa3
-    entity_id: binary_sensor.bedroom_motion_sensor_home_security_motion_detection
+    device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
+    entity_id: 0ebab270c041abc879e4023b641da0e0
     domain: binary_sensor
     for:
       hours: 0
@@ -589,11 +468,9 @@
   - service: light.turn_off
     data: {}
     target:
-      area_id:
-      - master_bedroom
-      - closet
+      area_id: master_bedroom
   mode: single
-- id: '1654886299473'
+- id: '1691714527341'
   alias: Motion Sensing Master Closet Light
   description: ''
   use_blueprint:
@@ -603,38 +480,7 @@
       light_target:
         area_id: closet
       no_motion_wait: 600
-- id: '1655226482993'
-  alias: Send a notification when internet speeds are low
-  description: ''
-  trigger:
-  - type: value
-    platform: device
-    device_id: 9e3cf823320a365ecfe5179c057f3fa5
-    entity_id: sensor.speedtest_download
-    domain: sensor
-    below: 25
-  - type: value
-    platform: device
-    device_id: 9e3cf823320a365ecfe5179c057f3fa5
-    entity_id: sensor.speedtest_upload
-    domain: sensor
-    below: 5
-  condition: []
-  action:
-  - device_id: cb8ccd94d6506f4e965763ba5f46434a
-    domain: mobile_app
-    type: notify
-    title: Slow Internet Speed
-    message: The{% set download_state = states('sensor.speedtest_download')%}{% set
-      upload_state = states('sensor.speedtest_upload') %}{% if is_number(download_state)
-      and download_state | float < 25 %} download speed for the last speed test was
-      {{download_state}}Mbps. {% else %} upload speed for the last speed test was
-      {{upload_state}}Mbps. {% endif %}
-    data:
-      push:
-        sound: ct-keytone2.caf
-  mode: single
-- id: '1656115346520'
+- id: '1691714549452'
   alias: Turn on laundry room light when door opens
   description: ''
   trigger:
@@ -646,210 +492,33 @@
   condition: []
   action:
   - type: turn_on
-    device_id: 2a9648ee07e8b2203585b11fca6fe4cf
-    entity_id: switch.laundry_room_light
+    device_id: cd36b04759f5f9459fca2c76e5ea4033
+    entity_id: 76a03f457cd8ae899247efebd3a473da
     domain: switch
   mode: single
-- id: '1656115399656'
-  alias: Turn off laundry room light when door closes
-  description: ''
-  trigger:
-  - type: not_opened
-    platform: device
-    device_id: 59ef993e8b02fa4181eadbb94685e59c
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
-    domain: binary_sensor
-  condition: []
-  action:
-  - type: turn_off
-    device_id: 2a9648ee07e8b2203585b11fca6fe4cf
-    entity_id: switch.laundry_room_light
-    domain: switch
-  mode: single
-- id: '1656192558910'
-  alias: Pico Turn on Bathroom Lights
-  description: ''
-  trigger:
-  - platform: device
-    device_id: 10efdd0ec4f1be2841b5382409d4cb14
-    domain: lutron_caseta
-    type: press
-    subtype: 'on'
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 9df9f6c6cce4dd4e50e9c4b0a868daaa
-    entity_id: light.master_bathroom_main_lights
-    domain: light
-  - type: turn_on
-    device_id: 6c2ca36f71c30e4e39119e1804ade125
-    entity_id: light.master_bathroom_shower_lights
-    domain: light
-  mode: single
-- id: '1656194121059'
-  alias: Pico Master Bathroom Turn on fan
-  description: ''
-  trigger:
-  - platform: device
-    device_id: 10efdd0ec4f1be2841b5382409d4cb14
-    domain: lutron_caseta
-    type: press
-    subtype: stop
-  condition: []
-  action:
-  - type: toggle
-    device_id: aea80c457d793f16da9836a98e4e9cc7
-    entity_id: switch.master_bathroom_fan_switch
-    domain: switch
-  mode: single
-- id: '1656194703245'
-  alias: Pico Remote In-Wall
+- id: '1691714662947'
+  alias: Pico Remote Master Bathroom
   description: ''
   use_blueprint:
     path: stephack/core-pico.yaml
     input:
-      auto_mode: restart
-      bottom_off:
-      - service: light.turn_off
-        data: {}
-        target:
-          area_id:
-          - master_bedroom
-          - master_bathroom
-          - closet
-      - type: turn_off
-        device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-        entity_id: switch.hue_motion_sensor_1_motion
-        domain: switch
-      - delay:
-          hours: 1
-          minutes: 0
-          seconds: 0
-          milliseconds: 0
-      - type: turn_on
-        device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-        entity_id: switch.hue_motion_sensor_1_motion
-        domain: switch
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id: input_boolean.bedroom_motion_sensor_state
-      top_on:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights
-        metadata: {}
-      - type: turn_on
-        device_id: 2c5ebf3c191e5b31022d7be2ed1b03f2
-        entity_id: switch.hue_motion_sensor_1_motion
-        domain: switch
-      - service: input_boolean.turn_on
-        data: {}
-        target:
-          entity_id: input_boolean.bedroom_motion_sensor_state
-      pico_remote: 10efdd0ec4f1be2841b5382409d4cb14
-      mode_max: 8
+      pico_remote: ec8d265c284bed9b46e51f0e1d6b7a84
       middle_stop:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.master_bedroom_reading
-        metadata: {}
-      - delay:
-          hours: 1
-          minutes: 0
-          seconds: 0
-          milliseconds: 0
-      - service: input_boolean.turn_on
-        data: {}
-        target:
-          entity_id: input_boolean.bedroom_motion_sensor_state
-      down_lower:
-      - service: media_player.volume_down
-        data: {}
-        target:
-          entity_id: media_player.bedroom_sonos
-      middle_stop_release:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id: input_boolean.bedroom_motion_sensor_state
-      up_raise:
-      - service: media_player.volume_up
-        data: {}
-        target:
-          entity_id: media_player.bedroom_sonos
-      bottom_off_release: []
-      up_raise_release: []
-- id: '1656344265978'
-  alias: Auto Bathroom Fan With Humidity
-  description: ''
-  use_blueprint:
-    path: celsian/humidity_mod.yaml
-    input:
-      humidity_sensor: sensor.shower_humidity_sensor_humidity
-      reference_humidity_sensor: sensor.my_ecobee_current_humidity
-      fan_switch: switch.master_bathroom_fan_switch
-      humidity_automation_boolean: input_boolean.manually_turned_on_bathroom_fan
-      rising_threshold: 25
-      falling_threshold: 25
-      reference_humidity: '55'
-- id: '1656344746725'
-  alias: Manually turn on master bathroom fan
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_on
-    device_id: aea80c457d793f16da9836a98e4e9cc7
-    entity_id: switch.master_bathroom_fan_switch
-    domain: switch
-  condition: []
-  action:
-  - service: input_boolean.turn_on
-    data: {}
-    target:
-      entity_id: input_boolean.manually_turned_on_bathroom_fan
-  - type: turn_on
-    device_id: aea80c457d793f16da9836a98e4e9cc7
-    entity_id: switch.master_bathroom_fan_switch
-    domain: switch
-  mode: single
-- id: '1656344825397'
-  alias: Manually turn off master bathroom fan
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_off
-    device_id: aea80c457d793f16da9836a98e4e9cc7
-    entity_id: switch.master_bathroom_fan_switch
-    domain: switch
-  condition: []
-  action:
-  - service: input_boolean.turn_off
-    data: {}
-    target:
-      entity_id: input_boolean.manually_turned_on_bathroom_fan
-  - type: turn_off
-    device_id: aea80c457d793f16da9836a98e4e9cc7
-    entity_id: switch.master_bathroom_fan_switch
-    domain: switch
-  mode: single
-- id: '1657235537809'
-  alias: New Automation
-  description: ''
-  trigger:
-  - type: opened
-    platform: device
-    device_id: e06021ed3c39f842c16d7d50aeb16583
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
-    domain: binary_sensor
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 2aaa628e163aa4ad07d6502f7c5ad9fe
-    entity_id: light.closet_light
-    domain: light
-  mode: single
-- id: '1657235561493'
+      - type: toggle
+        device_id: 9a75ed459178d9f05f7b9e5dfcc80f9a
+        entity_id: d3cec644b3740cd153c461a555d2a851
+        domain: switch
+      top_on:
+      - type: turn_on
+        device_id: 7c6329880ab1433cca04846f548362e2
+        entity_id: 44c2df0875c99ab1ce626a885fdbd786
+        domain: switch
+      bottom_off:
+      - type: turn_off
+        device_id: 7c6329880ab1433cca04846f548362e2
+        entity_id: 44c2df0875c99ab1ce626a885fdbd786
+        domain: switch
+- id: '1691714779499'
   alias: Turn Off Closet Light When Door Closes
   description: ''
   trigger:
@@ -865,140 +534,72 @@
     entity_id: light.closet_light
     domain: light
   mode: single
-- id: '1660787010406'
-  alias: New Automationasdf
-  description: ''
-  use_blueprint:
-    path: Pico Remote.yaml
-    input:
-      pico_remote: ec8d265c284bed9b46e51f0e1d6b7a84
-      top_on:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights
-        metadata: {}
-      bottom_off:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.new_scene
-        metadata: {}
-- id: '1660923957274'
-  alias: Pico Remote Master Bathroom
-  description: ''
-  use_blueprint:
-    path: Pico Remote.yaml
-    input:
-      pico_remote: ec8d265c284bed9b46e51f0e1d6b7a84
-      middle_stop:
-      - type: toggle
-        device_id: aea80c457d793f16da9836a98e4e9cc7
-        entity_id: switch.master_bathroom_fan_switch
-        domain: switch
-- id: '1669750218117'
-  alias: Live Stream Setup [Manual Trigger]
-  description: ''
-  trigger: []
-  condition: []
-  action:
-  - service: scene.turn_on
-    target:
-      entity_id: scene.master_bedroom_live_stream
-    metadata: {}
-  - service: lifx.effect_move
-    data:
-      speed: 45.1
-      theme: intense
-    target:
-      device_id:
-      - 7d3da82cc61061af25542b16321d89a3
-  - service: input_boolean.turn_off
-    data: {}
-    target:
-      entity_id: input_boolean.bedroom_motion_sensor_state
-  - delay:
-      hours: 3
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  - service: input_boolean.turn_on
-    data: {}
-    target:
-      entity_id: input_boolean.bedroom_motion_sensor_state
-  mode: restart
-- id: '1670518841363'
-  alias: Default Bedroom Setup [Manual Trigger]
-  description: ''
-  trigger: []
-  condition: []
-  action:
-  - service: scene.turn_on
-    target:
-      entity_id: scene.bedroom_lights
-    metadata: {}
-  - service: input_boolean.turn_on
-    data: {}
-    target:
-      entity_id: input_boolean.bedroom_motion_sensor_state
-  - service: lifx.effect_stop
-    data: {}
-    target:
-      area_id: master_bedroom
-  mode: restart
-- id: '1675456293038'
-  alias: Turn on humidifier if <35%
+- id: '1691714965294'
+  alias: Turn off laundry room light when door closes
   description: ''
   trigger:
-  - type: humidity
+  - type: not_opened
     platform: device
-    device_id: 1affbb39843799ce8a8e31386f0d2fa3
-    entity_id: sensor.bedroom_motion_sensor_humidity
-    domain: sensor
-    below: 40
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 057733e55a8a9036001f07ad0ee4f7fd
-    entity_id: switch.humidifier_plug_2
-    domain: switch
-  mode: single
-- id: '1675456356970'
-  alias: Turn off Humidifier if >35%
-  description: ''
-  trigger:
-  - type: humidity
-    platform: device
-    device_id: 1affbb39843799ce8a8e31386f0d2fa3
-    entity_id: sensor.bedroom_motion_sensor_humidity
-    domain: sensor
-    above: 40
+    device_id: 59ef993e8b02fa4181eadbb94685e59c
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+    domain: binary_sensor
   condition: []
   action:
   - type: turn_off
-    device_id: 057733e55a8a9036001f07ad0ee4f7fd
-    entity_id: switch.humidifier_plug_2
+    device_id: cd36b04759f5f9459fca2c76e5ea4033
+    entity_id: 76a03f457cd8ae899247efebd3a473da
     domain: switch
   mode: single
-- id: '1682425241175'
-  alias: Fix Jake’s Idiocy
+- id: '1691715004162'
+  alias: Auto Bathroom Fan With Humidity
+  description: ''
+  use_blueprint:
+    path: celsian/humidity_mod.yaml
+    input:
+      humidity_sensor: sensor.master_shower_humidity_sensor_humidity
+      reference_humidity_sensor: sensor.my_ecobee_current_humidity
+      fan_switch: switch.master_bathroom_fan_motion_switch
+      humidity_automation_boolean: input_boolean.manually_turned_on_bathroom_fan
+      rising_threshold: '15'
+      falling_threshold: '15'
+      reference_humidity: '55'
+- id: '1691715029066'
+  alias: Manually turn on master bathroom fan
   description: ''
   trigger:
-  - platform: time
-    at: 03:30:00
-  condition:
-  - type: is_temperature
-    condition: device
-    device_id: 068eca0a9c57e6af533f9dd8c8d68cb4
-    entity_id: sensor.2927_n_lincoln_realfeel_temperature
-    domain: sensor
-    below: 60
+  - platform: device
+    type: turned_on
+    device_id: 9a75ed459178d9f05f7b9e5dfcc80f9a
+    entity_id: d3cec644b3740cd153c461a555d2a851
+    domain: switch
+  condition: []
   action:
-  - device_id: c748b2188e9a6b95742d0edfe4f71308
-    domain: climate
-    entity_id: climate.my_ecobee_2
-    type: set_hvac_mode
-    hvac_mode: heat
-  - device_id: c748b2188e9a6b95742d0edfe4f71308
-    domain: button
-    entity_id: button.my_ecobee_clear_hold
-    type: press
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.manually_turned_on_bathroom_fan
+  - type: turn_on
+    device_id: 9a75ed459178d9f05f7b9e5dfcc80f9a
+    entity_id: d3cec644b3740cd153c461a555d2a851
+    domain: switch
+  mode: single
+- id: '1691715058812'
+  alias: Manually turn off master bathroom fan
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: 9a75ed459178d9f05f7b9e5dfcc80f9a
+    entity_id: d3cec644b3740cd153c461a555d2a851
+    domain: switch
+  condition: []
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.manually_turned_on_bathroom_fan
+  - type: turn_off
+    device_id: 9a75ed459178d9f05f7b9e5dfcc80f9a
+    entity_id: d3cec644b3740cd153c461a555d2a851
+    domain: switch
   mode: single

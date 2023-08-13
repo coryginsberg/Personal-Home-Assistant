@@ -160,7 +160,7 @@ sensor:
     entity_id: sensor.master_bathroom_temperature
     id: bathroom_temperature
   - platform: homeassistant
-    entity_id: sensor.shower_humidity_sensor_humidity
+    entity_id: sensor.master_shower_humidity_sensor_humidity
     id: shower_humidity
 
 text_sensor:
