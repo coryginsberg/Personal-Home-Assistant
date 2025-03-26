@@ -1,0 +1,191 @@
+blueprint:
+  name: Light Transition Effect
+  description: 'Turns on a light to a specified RGB/Temp color and brightness, then
+    transitions to a new brightness and color over a set amount of time.
+
+    '
+  author: Mirai-Miki
+  homeassistant:
+    min_version: 2024.6.0
+  domain: script
+  input:
+    light_entity:
+      name: Light
+      description: The light entity to control.
+      selector:
+        entity:
+          domain:
+          - light
+          multiple: false
+    color_mode:
+      name: Color Mode
+      description: Choose between RGB or Temprature color mode.
+      default: RGB
+      selector:
+        select:
+          options:
+          - RGB
+          - Temperature
+          sort: false
+          custom_value: false
+          multiple: false
+    initial_color:
+      name: Initial Color (RGB)
+      description: Initial RGB color of the light.
+      default:
+      - 255
+      - 0
+      - 0
+      selector:
+        color_rgb: {}
+    target_color:
+      name: Target Color (RGB)
+      description: Target RGB color.
+      default:
+      - 255
+      - 0
+      - 0
+      selector:
+        color_rgb: {}
+    initial_temp:
+      name: Initial Temperature
+      description: Initial color temperature of the light in Kelvin.
+      default: 2700
+      selector:
+        color_temp:
+          unit: kelvin
+    target_temp:
+      name: Target Temperature
+      description: Target color temperature in Kelvin.
+      default: 6500
+      selector:
+        color_temp:
+          unit: kelvin
+    initial_brightness:
+      name: Initial Brightness
+      description: Initial brightness of the light.
+      default: 1
+      selector:
+        number:
+          min: 1.0
+          max: 100.0
+          unit_of_measurement: '%'
+          mode: slider
+          step: 1.0
+    target_brightness:
+      name: Target Brightness
+      description: Final brightness of the light.
+      default: 100
+      selector:
+        number:
+          min: 1.0
+          max: 100.0
+          unit_of_measurement: '%'
+          mode: slider
+          step: 1.0
+    transition_time:
+      name: Transition Time
+      description: Time for the transition in seconds.
+      default:
+        minutes: 1
+      selector:
+        duration: {}
+    step_time:
+      name: Step Time
+      description: Time between each transition step in seconds.
+      default: 1
+      selector:
+        number:
+          min: 1.0
+          max: 60.0
+          unit_of_measurement: seconds
+          mode: slider
+          step: 1.0
+  source_url: https://github.com/Mirai-Miki/home-assistant-blueprints/blob/main/ha_light_transition_blueprint.yaml
+variables:
+  light_entity: !input light_entity
+  step_time: !input step_time
+  transition_time: !input transition_time
+  color_mode: !input color_mode
+  initial_temp: !input initial_temp
+  target_temp: !input target_temp
+  initial_color: !input initial_color
+  target_color: !input target_color
+  initial_brightness: !input initial_brightness
+  target_brightness: !input target_brightness
+  i_brightness: '{{ ((int(initial_brightness) / 100) * 255) | int }}'
+  t_brightness: '{{ ((int(target_brightness) / 100) * 255) | int }}'
+  steps: '{{ ( int(transition_time.seconds | default(0)) + (int(transition_time.minutes
+    | default(0)) * 60) + (int(transition_time.hours | default(0)) * 3600) ) / int(step_time)
+    | int }}'
+  brightness_step: '{{ (int(t_brightness) - int(i_brightness)) / steps }}'
+  temp_step: '{{ (int(target_temp) - int(initial_temp)) / steps }}'
+sequence:
+- condition: template
+  value_template: '{{ states(light_entity) != ''on'' }}'
+  enabled: true
+- choose:
+  - conditions:
+    - condition: template
+      value_template: '{{ color_mode == ''RGB'' }}'
+    sequence:
+    - service: light.turn_on
+      target:
+        entity_id: !input light_entity
+      data:
+        brightness: '{{ i_brightness }}'
+        rgb_color: !input initial_color
+  - conditions:
+    - condition: template
+      value_template: '{{ color_mode == ''Temperature'' }}'
+    sequence:
+    - service: light.turn_on
+      target:
+        entity_id: !input light_entity
+      data:
+        brightness: '{{ i_brightness }}'
+        kelvin: !input initial_temp
+- wait_for_trigger:
+  - platform: state
+    entity_id: !input light_entity
+    to: 'on'
+  timeout:
+    seconds: 10
+  continue_on_timeout: false
+- repeat:
+    while:
+    - condition: template
+      value_template: '{{ repeat.index <= steps and states(light_entity) == ''on''
+        }}'
+    sequence:
+    - choose:
+      - conditions:
+        - condition: template
+          value_template: '{{ color_mode == ''RGB'' }}'
+        sequence:
+        - service: light.turn_on
+          target:
+            entity_id: !input light_entity
+          data:
+            brightness: '{{ (int(i_brightness) + (repeat.index * brightness_step))
+              | int }}'
+            rgb_color:
+            - '{{ (initial_color[0] + ((target_color[0] - initial_color[0]) / steps)
+              * repeat.index) | int }}'
+            - '{{ (initial_color[1] + ((target_color[1] - initial_color[1]) / steps)
+              * repeat.index) | int }}'
+            - '{{ (initial_color[2] + ((target_color[2] - initial_color[2]) / steps)
+              * repeat.index) | int }}'
+      - conditions:
+        - condition: template
+          value_template: '{{ color_mode == ''Temperature'' }}'
+        sequence:
+        - service: light.turn_on
+          target:
+            entity_id: !input light_entity
+          data:
+            brightness: '{{ (int(i_brightness) + (repeat.index * brightness_step))
+              | int }}'
+            kelvin: '{{ (int(initial_temp) + (repeat.index * temp_step)) | int }}'
+    - delay:
+        seconds: !input step_time

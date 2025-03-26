@@ -1,0 +1,645 @@
+- id: '1736959438104'
+  name: Master Bedroom Default
+  entities:
+    light.ceiling_fan_lights:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - colorloop
+      - 'off'
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: color_temp
+      brightness: 254
+      color_temp_kelvin: 3508
+      color_temp: 285
+      hs_color:
+      - 27.165
+      - 44.6
+      rgb_color:
+      - 255
+      - 193
+      - 141
+      xy_color:
+      - 0.453
+      - 0.374
+      entity_id:
+      - light.ceiling_fan_1_light
+      - light.ceiling_fan_2_light
+      - light.ceiling_fan_3_light
+      icon: mdi:ceiling-fan-light
+      friendly_name: Ceiling Fan Lights
+      supported_features: 44
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_bed_frame:
+      icon: mdi:sleep
+      friendly_name: 'Adaptive Lighting Sleep Mode: Bed Frame'
+      state: 'off'
+    switch.adaptive_lighting_adapt_color_bed_frame:
+      icon: mdi:sun-thermometer
+      friendly_name: 'Adaptive Lighting Adapt Color: Bed Frame'
+      state: 'on'
+    switch.adaptive_lighting_adapt_brightness_bed_frame:
+      icon: mdi:brightness-4
+      friendly_name: 'Adaptive Lighting Adapt Brightness: Bed Frame'
+      state: 'on'
+    switch.adaptive_lighting_bed_frame:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Bed Frame'
+      configuration: {}
+      manual_control: []
+      brightness_pct: 100
+      color_temp_kelvin: 8030
+      color_temp_mired: 124
+      rgb_color:
+      - 220.77636369027832
+      - 229.5309795947171
+      - 255
+      xy_color:
+      - 0.295
+      - 0.301
+      hs_color:
+      - 224.571
+      - 13.725
+      sun_position: 0.9277148845933139
+      force_rgb_color: false
+      autoreset_time_remaining: {}
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_computer_desk:
+      icon: mdi:sleep
+      friendly_name: 'Adaptive Lighting Sleep Mode: Computer Desk'
+      state: 'off'
+    switch.adaptive_lighting_adapt_color_computer_desk:
+      icon: mdi:sun-thermometer
+      friendly_name: 'Adaptive Lighting Adapt Color: Computer Desk'
+      state: 'on'
+    switch.adaptive_lighting_adapt_brightness_computer_desk:
+      icon: mdi:brightness-4
+      friendly_name: 'Adaptive Lighting Adapt Brightness: Computer Desk'
+      state: 'on'
+    switch.adaptive_lighting_computer_desk:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Computer Desk'
+      configuration: {}
+      manual_control: []
+      brightness_pct: 60
+      color_temp_kelvin: 6180
+      color_temp_mired: 161
+      rgb_color:
+      - 255
+      - 249.0884092846169
+      - 241.7387349979624
+      xy_color:
+      - 0.334
+      - 0.336
+      hs_color:
+      - 34.286
+      - 5.49
+      sun_position: 0.9289497165813319
+      force_rgb_color: false
+      autoreset_time_remaining: {}
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_computer_shelf:
+      icon: mdi:sleep
+      friendly_name: 'Adaptive Lighting Sleep Mode: Computer Shelf'
+      state: 'off'
+    switch.adaptive_lighting_adapt_color_computer_shelf:
+      icon: mdi:sun-thermometer
+      friendly_name: 'Adaptive Lighting Adapt Color: Computer Shelf'
+      state: 'on'
+    switch.adaptive_lighting_adapt_brightness_computer_shelf:
+      icon: mdi:brightness-4
+      friendly_name: 'Adaptive Lighting Adapt Brightness: Computer Shelf'
+      state: 'on'
+    switch.adaptive_lighting_computer_shelf:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Computer Shelf'
+      configuration: {}
+      manual_control: []
+      brightness_pct: 100
+      color_temp_kelvin: 6645
+      color_temp_mired: 150
+      rgb_color:
+      - 255
+      - 250.28965319415084
+      - 255
+      xy_color:
+      - 0.325
+      - 0.324
+      hs_color:
+      - 312
+      - 1.961
+      sun_position: 0.9285858004632589
+      force_rgb_color: false
+      autoreset_time_remaining: {}
+      state: 'on'
+    switch.adaptive_lighting_adapt_brightness_record_shelf:
+      icon: mdi:brightness-4
+      friendly_name: 'Adaptive Lighting Adapt Brightness: Record Shelf'
+      state: 'on'
+    switch.adaptive_lighting_adapt_color_record_shelf:
+      icon: mdi:sun-thermometer
+      friendly_name: 'Adaptive Lighting Adapt Color: Record Shelf'
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_record_shelf:
+      icon: mdi:sleep
+      friendly_name: 'Adaptive Lighting Sleep Mode: Record Shelf'
+      state: 'off'
+    switch.adaptive_lighting_record_shelf:
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Record Shelf'
+      configuration: {}
+      manual_control: []
+      brightness_pct: 100
+      color_temp_kelvin: 5180
+      color_temp_mired: 193
+      rgb_color:
+      - 255
+      - 231.53049810179812
+      - 212.02753911210868
+      xy_color:
+      - 0.365
+      - 0.347
+      hs_color:
+      - 27.273
+      - 17.255
+      sun_position: 0.9284666093856566
+      force_rgb_color: false
+      autoreset_time_remaining: {}
+      state: 'on'
+    switch.adaptive_lighting_sleep_mode_ceiling_fan_lights:
+      icon: mdi:sleep
+      friendly_name: 'Adaptive Lighting Sleep Mode: Ceiling Fan Lights'
+      state: 'off'
+    switch.adaptive_lighting_adapt_color_ceiling_fan_lights:
+      icon: mdi:sun-thermometer
+      friendly_name: 'Adaptive Lighting Adapt Color: Ceiling Fan Lights'
+      state: 'off'
+    switch.adaptive_lighting_adapt_brightness_ceiling_fan_lights:
+      icon: mdi:brightness-4
+      friendly_name: 'Adaptive Lighting Adapt Brightness: Ceiling Fan Lights'
+      state: 'off'
+    switch.adaptive_lighting_ceiling_fan_lights:
+      configuration: {}
+      icon: mdi:theme-light-dark
+      friendly_name: 'Adaptive Lighting: Ceiling Fan Lights'
+      state: 'off'
+  metadata:
+    light.ceiling_fan_lights:
+      entity_only: true
+  icon: mdi:bed-king
+- id: '1736960080986'
+  name: Streamer Lights
+  entities:
+    light.ceiling_fan_1_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: color_temp
+      brightness: 254
+      color_temp_kelvin: 3508
+      color_temp: 285
+      hs_color:
+      - 27.165
+      - 44.6
+      rgb_color:
+      - 255
+      - 193
+      - 141
+      xy_color:
+      - 0.453
+      - 0.374
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Ceiling Fan 1 Light
+      supported_features: 44
+      state: 'on'
+    light.ceiling_fan_2_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: color_temp
+      brightness: 254
+      color_temp_kelvin: 3508
+      color_temp: 285
+      hs_color:
+      - 27.165
+      - 44.6
+      rgb_color:
+      - 255
+      - 193
+      - 141
+      xy_color:
+      - 0.453
+      - 0.374
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Ceiling Fan 2 Light
+      supported_features: 44
+      state: 'on'
+    light.ceiling_fan_3_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: color_temp
+      brightness: 254
+      color_temp_kelvin: 3508
+      color_temp: 285
+      hs_color:
+      - 27.165
+      - 44.6
+      rgb_color:
+      - 255
+      - 193
+      - 141
+      xy_color:
+      - 0.453
+      - 0.374
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Ceiling Fan 3 Light
+      supported_features: 44
+      state: 'on'
+    light.bed_frame_light_strip:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      effect:
+      color_mode: hs
+      brightness: 255
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 226.838
+      - 10.547
+      rgb_color:
+      - 228
+      - 234
+      - 255
+      xy_color:
+      - 0.302
+      - 0.307
+      friendly_name: Bed Frame Light Strip
+      supported_features: 36
+      state: 'on'
+    light.computer_shelf:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      effect:
+      color_mode: hs
+      brightness: 255
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 284.446
+      - 2.707
+      rgb_color:
+      - 253
+      - 248
+      - 255
+      xy_color:
+      - 0.323
+      - 0.321
+      friendly_name: Computer Shelf
+      supported_features: 36
+      state: 'on'
+    light.desk_lightstrip_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: xy
+      brightness: 153
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 277.5
+      - 3.137
+      rgb_color:
+      - 252
+      - 247
+      - 255
+      xy_color:
+      - 0.323
+      - 0.321
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Desk Lightstrip Light
+      supported_features: 44
+      state: 'on'
+    light.tzb210_tmi0rihb_ts0505b_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 254
+      color_temp_kelvin: 5617
+      color_temp: 178
+      hs_color:
+      - 28.328
+      - 11.451
+      rgb_color:
+      - 255
+      - 240
+      - 226
+      xy_color:
+      - 0.35
+      - 0.342
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Record Shelf Lights Light
+      supported_features: 40
+      state: 'on'
+  icon: mdi:nintendo-game-boy
+  metadata: {}
+- id: '1737044704510'
+  name: Meeting Lights
+  entities:
+    light.elgato_key_light_mini:
+      min_color_temp_kelvin: 2900
+      max_color_temp_kelvin: 7000
+      min_mireds: 142
+      max_mireds: 344
+      supported_color_modes:
+      - color_temp
+      color_mode: color_temp
+      brightness: 76
+      color_temp_kelvin: 3690
+      color_temp: 271
+      hs_color:
+      - 27.004
+      - 40.795
+      rgb_color:
+      - 255
+      - 198
+      - 151
+      xy_color:
+      - 0.44
+      - 0.371
+      friendly_name: Elgato Key Light Mini
+      supported_features: 0
+      state: 'on'
+    light.elgato_key_light_mini_2:
+      min_color_temp_kelvin: 2900
+      max_color_temp_kelvin: 7000
+      min_mireds: 142
+      max_mireds: 344
+      supported_color_modes:
+      - color_temp
+      color_mode: color_temp
+      brightness: 76
+      color_temp_kelvin: 5181
+      color_temp: 193
+      hs_color:
+      - 27.232
+      - 16.839
+      rgb_color:
+      - 255
+      - 232
+      - 212
+      xy_color:
+      - 0.364
+      - 0.348
+      friendly_name: Elgato Key Light Mini 2
+      supported_features: 0
+      state: 'on'
+    input_boolean.meeting_lights_toggle:
+      editable: true
+      icon: mdi:laptop-account
+      friendly_name: Meeting Lights Toggle
+      state: 'on'
+  icon: mdi:human-male-board
+  metadata:
+    input_boolean.meeting_lights_toggle:
+      entity_only: true
+- id: '1737068145967'
+  name: New scene
+  entities:
+    media_player.living_room:
+      source_list:
+      - TV
+      group_members:
+      - media_player.living_room
+      volume_level: 0.36
+      is_volume_muted: false
+      media_content_id: x-sonos-htastream:RINCON_F0F6C170FCD801400:spdif
+      media_content_type: music
+      media_title: TV
+      source: TV
+      shuffle: false
+      repeat: 'off'
+      queue_size: 1
+      device_class: speaker
+      friendly_name: Living Room
+      supported_features: 4127295
+      state: playing
+  metadata: {}
+- id: '1738381607512'
+  name: Master Bedroom Party
+  entities:
+    light.ceiling_fan_1_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: xy
+      brightness: 138
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 297.857
+      - 98.824
+      rgb_color:
+      - 246
+      - 3
+      - 255
+      xy_color:
+      - 0.375
+      - 0.15
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Ceiling Fan 1 Light
+      supported_features: 44
+      state: 'on'
+    light.ceiling_fan_2_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: xy
+      brightness: 254
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 184.016
+      - 99.608
+      rgb_color:
+      - 1
+      - 238
+      - 255
+      xy_color:
+      - 0.15
+      - 0.316
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Ceiling Fan 2 Light
+      supported_features: 44
+      state: 'on'
+    light.ceiling_fan_3_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: xy
+      brightness: 254
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 120.269
+      - 87.451
+      rgb_color:
+      - 32
+      - 255
+      - 33
+      xy_color:
+      - 0.179
+      - 0.728
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Ceiling Fan 3 Light
+      supported_features: 44
+      state: 'on'
+    input_boolean.automatic_master_bedroom_lights:
+      editable: true
+      icon: mdi:lightbulb-auto
+      friendly_name: Automatic Master Bedroom Lights
+      state: 'off'
+    light.desk_lightstrip_light:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - 'off'
+      - colorloop
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: 'off'
+      color_mode: xy
+      brightness: 66
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 25.826
+      - 90.196
+      rgb_color:
+      - 255
+      - 124
+      - 25
+      xy_color:
+      - 0.613916
+      - 0.366552
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Desk Lightstrip Light
+      supported_features: 44
+      state: 'on'
+    input_boolean.party_mode_toggle:
+      editable: true
+      icon: mdi:party-popper
+      friendly_name: Party Mode Toggle
+      state: 'on'
+  icon: mdi:party-popper
+  metadata:
+    light.ceiling_fan_1_light:
+      entity_only: true
+    light.ceiling_fan_2_light:
+      entity_only: true
+    light.ceiling_fan_3_light:
+      entity_only: true
+    input_boolean.automatic_master_bedroom_lights:
+      entity_only: true
+    light.desk_lightstrip_light:
+      entity_only: true
+    input_boolean.party_mode_toggle:
+      entity_only: true

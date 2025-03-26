@@ -1,0 +1,148 @@
+blueprint:
+  name: Parabolic Light Transition
+  author: Coleslaw1994
+  description: 'Script to transition light color/temperature over specified time following
+    the parabolic curve specified.
+
+    '
+  source_url: https://github.com/Coleslaw1994/ha_parabolic_light_transition/blob/main/parabolic_light_transition.yaml
+  domain: script
+  homeassistant:
+    min_version: 2024.9.0
+  input: {}
+fields:
+  target_light:
+    description: Light to be transitioned
+    selector:
+      entity:
+        filter:
+          domain: light
+    name: Target Light
+    required: true
+  starting_brightness:
+    description: The brightness to set the light to initially. This is ignored if
+      the light is already on.
+    selector:
+      number:
+        min: 1
+        max: 100
+    default: 1
+    name: Starting brightness
+    required: true
+  target_brightness:
+    description: The brightness the light should reach by the end of the transition.
+    selector:
+      number:
+        min: 1
+        max: 100
+    default: 100
+    name: Target brightness
+    required: true
+  brightness_exponent:
+    description: The exponent which defines the parabolic curve to follow for brightness,
+      e.g. 2 for the parabolic curve y=x^2. You can easily visualize parabolic curves
+      by entering the formula into wolfram alpha.
+    selector:
+      number:
+    default: 2
+    name: Brightness exponent
+    required: true
+  starting_kelvin:
+    description: The color temperature to set the light to initially. This is ignored
+      if the light is already on.
+    selector:
+      color_temp:
+        unit: kelvin
+        min: 2000
+        max: 6500
+    default: 2000
+    name: Starting Kelvin
+    required: true
+  target_kelvin:
+    description: The color temperature the light should reach by the end of the transition.
+    selector:
+      color_temp:
+        unit: kelvin
+        min: 2000
+        max: 6500
+    default: 6500
+    name: Target Kelvin
+    required: true
+  kelvin_exponent:
+    description: The exponent which defines the parabolic curve to follow for color
+      temperature, e.g. 2 for the parabolic curve y=x^2. You can easily visualize
+      parabolic curves by entering the formula into wolfram alpha.
+    selector:
+      number:
+    default: 2
+    name: Kelvin exponent
+    required: true
+  transition_length:
+    description: The time it will take to complete the transition. Take this into
+      account when setting up the automation this script is called by.
+    selector:
+      number:
+    default: 15
+    name: Transition length
+    required: true
+  steps_per_minute:
+    description: 'The number of commands home assistant will send to the light each
+      minute. Higher numbers will result in more accurate tracking along the parabolic
+      curve. '
+    selector:
+      number:
+    default: 12
+    name: Steps Per minute
+    required: true
+sequence:
+- variables:
+    interval_time: '{{60 / steps_per_minute}}'
+    start_time: '{{as_timestamp(now())}}'
+    finish_time: '{{start_time + transition_length * 60}}'
+    starting_brightness: "{% if states(target_light) == 'off' %}\n  {{starting_brightness}}\n{%
+      else %}\n  {{state_attr(target_light, 'brightness')/2.55}}\n{% endif %}"
+    brightness_change: '{{target_brightness - starting_brightness}}'
+    starting_kelvin: "{% if states(target_light) == 'off' %}\n  {{starting_brightness}}\n{%
+      else %}\n  {{state_attr(target_light, 'color_temp_kelvin')}}\n{% endif %}"
+    kelvin_change: '{{target_kelvin - starting_kelvin}}'
+- action: light.turn_on
+  data:
+    brightness_pct: '{{starting_brightness}}'
+    color_temp_kelvin: '{{starting_kelvin}}'
+    transition: '{{interval_time - 1}}'
+  target:
+    entity_id: '{{target_light}}'
+- delay:
+    seconds: '{{interval_time}}'
+- repeat:
+    until:
+    - condition: template
+      value_template: '{{as_timestamp(now()) >= finish_time - interval_time}}'
+    sequence:
+    - variables:
+        percent: '{{(as_timestamp(now()) - start_time) / (transition_length * 60)}}'
+        brightness: '{{(starting_brightness |float + brightness_change |float * percent
+          |float ** brightness_exponent |float) |round}} '
+        kelvin: '{{(starting_kelvin |float + kelvin_change |float * percent |float
+          ** kelvin_exponent |float) |round}} '
+    - if:
+      - condition: template
+        value_template: '{{is_state(target_light, ''on'')}}'
+      then:
+      - action: light.turn_on
+        data:
+          brightness_pct: '{{brightness}}'
+          color_temp_kelvin: '{{kelvin}}'
+          transition: '{{interval_time - 1}}'
+        target:
+          entity_id: '{{target_light}}'
+    - delay:
+        seconds: '{{interval_time}}'
+- action: light.turn_on
+  data:
+    brightness_pct: '{{target_brightness}}'
+    color_temp_kelvin: '{{target_kelvin}}'
+    transition: '{{interval_time - 1}}'
+  target:
+    entity_id: '{{target_light}}'
+mode: parallel

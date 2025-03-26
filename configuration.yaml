@@ -1,0 +1,26 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+sensor: !include sensors.yaml
+template: !include templates.yaml
+
+http:
+  server_port: 8443 # Only 443, 2053, 2083, 2087, 2096, and 8443 are allowed through Cloudflare
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+  # ip_ban_enabled: true
+  # login_attempts_threshold: 5
+
+pyscript:
+  allow_all_imports: true
+  hass_is_global: true
+
+api:

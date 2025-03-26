@@ -1,0 +1,1187 @@
+- id: '1736182848455'
+  alias: Motion Activated Lights
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.master_bathroom_motion_sensor_motion
+    to: 'on'
+  conditions:
+  - condition: time
+    after: 07:30:00
+    before: '23:00:00'
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  actions:
+  - alias: Turn on the light
+    action: light.turn_on
+    target:
+      area_id: master_bathroom
+    data: {}
+  - alias: Wait until there is no motion from device
+    wait_for_trigger:
+      trigger: state
+      entity_id: binary_sensor.master_bathroom_motion_sensor_motion
+      from: 'on'
+      to: 'off'
+  - alias: Wait the number of seconds that has been set
+    delay: 1800
+  - alias: Turn off the light
+    action: light.turn_off
+    target:
+      area_id: master_bathroom
+    data: {}
+  mode: restart
+  max_exceeded: silent
+- id: '1736184397197'
+  alias: Automatic Master Closet Light
+  description: ''
+  triggers:
+  - type: opened
+    device_id: 490741ec9aa51cb7fab5bbb30c0228ea
+    entity_id: 5aa69e4f974d388e4d49deef2e65712d
+    domain: binary_sensor
+    trigger: device
+  - type: motion
+    device_id: b5494aa22c82495b287828ca02dc3824
+    entity_id: 432e647a17e1d6782b3bf013daa58d9e
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      area_id: master_closet
+  - wait_for_trigger:
+    - type: not_opened
+      device_id: 490741ec9aa51cb7fab5bbb30c0228ea
+      entity_id: 5aa69e4f974d388e4d49deef2e65712d
+      domain: binary_sensor
+      trigger: device
+    - type: no_motion
+      device_id: b5494aa22c82495b287828ca02dc3824
+      entity_id: 432e647a17e1d6782b3bf013daa58d9e
+      domain: binary_sensor
+      trigger: device
+      for:
+        hours: 0
+        minutes: 15
+        seconds: 0
+    continue_on_timeout: true
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id: master_closet
+  mode: restart
+- id: '1736184583062'
+  alias: Automatic Laundry Room Light
+  description: ''
+  triggers:
+  - type: opened
+    device_id: e4a28bcc5d34cdee7a7b4f229f5e2d82
+    entity_id: e1a0bb413178768027d5dbd2bf2c5e87
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: c2bae4bb25aa665d08f3d1a6d64c3721
+  - wait_for_trigger:
+    - type: not_opened
+      device_id: e4a28bcc5d34cdee7a7b4f229f5e2d82
+      entity_id: e1a0bb413178768027d5dbd2bf2c5e87
+      domain: binary_sensor
+      trigger: device
+    continue_on_timeout: true
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: c2bae4bb25aa665d08f3d1a6d64c3721
+  mode: single
+- id: '1736185338587'
+  alias: Toggle Meeting Lights
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - if:
+    - condition: device
+      type: is_off
+      device_id: 294b7f51608365609ed6149b99d21837
+      entity_id: e74dd0704fb30cbdd0adc38649a0f525
+      domain: light
+    then:
+    - action: light.turn_on
+      metadata: {}
+      data:
+        kelvin: 4701
+        brightness_pct: 40
+      target:
+        device_id:
+        - 294b7f51608365609ed6149b99d21837
+        - 2af29fe40e4a9999f0509b2c29138088
+    else:
+    - action: light.turn_off
+      metadata: {}
+      data: {}
+      target:
+        device_id:
+        - 294b7f51608365609ed6149b99d21837
+        - 2af29fe40e4a9999f0509b2c29138088
+  mode: single
+- id: '1736185875808'
+  alias: Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      actions:
+      - action: notify.mobile_app_corys_iphone
+        metadata: {}
+        data:
+          title: Sensor Battery Low
+          message: The batteries in {{sensors}} are low. Please change them soon.
+      exclude:
+        entity_id:
+        - sensor.elgato_key_light_mini_sidedesk_battery
+        - sensor.elgato_key_light_mini_2_battery
+        - sensor.elgato_key_light_mini_battery
+      threshold: 15
+- id: '1736186125485'
+  alias: Master Bathroom Pico Remote
+  description: ''
+  use_blueprint:
+    path: gregtakacs/lutron_pico_5_button_actions.yaml
+    input:
+      pico_id: 314447c6bc3d3f67da5b05b576fcadae
+      short_click_action_on:
+      - action: light.turn_on
+        metadata: {}
+        data: {}
+        target:
+          area_id: master_bathroom
+      short_click_action_off:
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          area_id: master_bathroom
+      short_click_action_stop:
+      - type: toggle
+        device_id: 9a43f00a67d0bf41ff1d5c7eed36c5ad
+        entity_id: e76f34b79db7f2cc6df3edb5b7241040
+        domain: switch
+- id: '1736259752794'
+  alias: Automatic Master Bedroom Lights
+  description: ''
+  triggers:
+  - type: motion
+    device_id: 9a43f00a67d0bf41ff1d5c7eed36c5ad
+    entity_id: 862d1de4e0e30d9a6027fd30cb891f38
+    domain: binary_sensor
+    trigger: device
+  conditions:
+  - condition: state
+    entity_id: input_boolean.automatic_master_bedroom_lights
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: time
+      after: 07:45:00
+      before: '23:00:00'
+      weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+    - condition: time
+      after: 09:30:00
+      before: '23:30:00'
+      weekday:
+      - sun
+      - sat
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.master_bedroom_ambient_lights
+  - action: scene.turn_on
+    metadata: {}
+    data:
+      transition: 1
+    target:
+      entity_id: scene.new_scene
+  - alias: Wait until there is no motion from device
+    wait_for_trigger:
+    - type: no_motion
+      device_id: 9a43f00a67d0bf41ff1d5c7eed36c5ad
+      entity_id: 862d1de4e0e30d9a6027fd30cb891f38
+      domain: binary_sensor
+      trigger: device
+      for:
+        hours: 0
+        minutes: 30
+        seconds: 0
+  - alias: Turn off the light
+    action: light.turn_off
+    target:
+      area_id: master_bedroom
+    data: {}
+  mode: restart
+  max_exceeded: silent
+- id: '1736261173199'
+  alias: Automatic Living Room Lights
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.living_room_motion_sensor_motion
+    from: 'off'
+    to: 'on'
+  conditions:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.frunchroom_motion_lights_toggle
+      state: 'on'
+    - condition: time
+      after: 07:00:00
+      before: 01:00:00
+      weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+      - sun
+  actions:
+  - alias: Turn on the light
+    action: light.turn_on
+    target:
+      device_id: 45de833e3dd1786784cd62889e463a38
+    data: {}
+  - alias: Wait until there is no motion from device
+    wait_for_trigger:
+      trigger: state
+      entity_id: binary_sensor.living_room_motion_sensor_motion
+      from: 'on'
+      to: 'off'
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  - alias: Turn off the light
+    action: light.turn_off
+    target:
+      device_id: 45de833e3dd1786784cd62889e463a38
+    data: {}
+  mode: restart
+  max_exceeded: silent
+- id: '1736342132636'
+  alias: Automatic Kitchen Lights
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.in_wall_motion_switch_500s_motion_detection_2
+    to: 'on'
+  conditions:
+  - condition: state
+    entity_id: input_boolean.frunchroom_motion_lights_toggle
+    state: 'on'
+  actions:
+  - alias: Turn on the light
+    action: light.turn_on
+    target:
+      area_id: kitchen
+    data: {}
+  - alias: Wait until there is no motion from device
+    wait_for_trigger:
+      trigger: state
+      entity_id: binary_sensor.in_wall_motion_switch_500s_motion_detection_2
+      from: 'on'
+      to: 'off'
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+  - alias: Turn off the light
+    action: light.turn_off
+    target:
+      area_id: kitchen
+    data: {}
+  mode: restart
+  max_exceeded: silent
+- id: '1736533605533'
+  alias: Sunrise Alarm
+  description: ''
+  triggers:
+  - trigger: time
+    at: input_datetime.alarm
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.workday_sensor
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: device
+      type: is_off
+      device_id: eb6bb9b4127c1daae28dc2becbb8c91e
+      entity_id: 4a3b94c71dbf2e43764971a633201c2e
+      domain: light
+    - condition: device
+      type: is_off
+      device_id: 6aa5dcf81a197d0dd5b38f526f3fb2cc
+      entity_id: 79c780906741cc6d12c06c474dfebfce
+      domain: light
+    - condition: device
+      type: is_off
+      device_id: fe5dedd3486528d57fa8c39ba4b6a2a6
+      entity_id: cd0047149220b1555548f14a24d6b57c
+      domain: light
+  actions:
+  - parallel:
+    - type: turn_off
+      device_id: 6290bbd5634e702b82c0c51e6bb933af
+      entity_id: ef2158ceb56e43021af6e04186776321
+      domain: switch
+    - type: turn_off
+      device_id: 6290bbd5634e702b82c0c51e6bb933af
+      entity_id: 878679de6d5afa11fc0c30b8d309f8e5
+      domain: switch
+    alias: Disable Adaptive Lighting
+  - alias: Starting Values
+    action: light.turn_on
+    metadata: {}
+    data:
+      kelvin: 5701
+      brightness_pct: 1
+    target:
+      entity_id: light.ceiling_fan_lights
+  - sequence:
+    - action: light.turn_on
+      metadata: {}
+      data:
+        kelvin: 4700
+        brightness_pct: 100
+        transition: 1200
+      target:
+        entity_id: light.ceiling_fan_lights
+      alias: Increase Brightness
+    - action: light.turn_on
+      metadata: {}
+      data:
+        kelvin: 3503
+        brightness_pct: 100
+        transition: 300
+      target:
+        entity_id: light.ceiling_fan_lights
+      alias: Update Color
+  mode: single
+- id: '1736873487701'
+  alias: Alert when laundry is done
+  description: ''
+  triggers:
+  - type: motion
+    device_id: 591de37d7af68a9727128b65b5ef418e
+    entity_id: c343d61767f3c8c75a15e772c7bd1163
+    domain: binary_sensor
+    trigger: device
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  conditions: []
+  actions:
+  - wait_for_trigger:
+    - type: no_motion
+      device_id: 591de37d7af68a9727128b65b5ef418e
+      entity_id: c343d61767f3c8c75a15e772c7bd1163
+      domain: binary_sensor
+      trigger: device
+  - action: tts.speak
+    metadata: {}
+    data:
+      cache: true
+      media_player_entity_id: media_player.cory_s_ecobee_smart_thermostat_premium
+      message: <angry, yelling> "The laundry is done, <pause><offended>bitch!"
+      options:
+        voice: aTbnroHRGIomiKpqAQR8
+    target:
+      entity_id: tts.elevenlabs
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.7
+    target:
+      device_id: 6ef9f95d338a82b17f9aa72b072029f4
+  - action: tts.speak
+    metadata: {}
+    data:
+      cache: true
+      media_player_entity_id: media_player.master_bedroom
+      message: <angry, yelling> "The laundry is done, <pause><offended>bitch!"
+      options:
+        voice: aTbnroHRGIomiKpqAQR8
+    target:
+      entity_id: tts.elevenlabs
+  mode: restart
+- id: '1737046241113'
+  alias: Toggle Meeting Lights
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: input_boolean.meeting_lights_toggle
+      state: 'off'
+    then:
+    - action: scene.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: scene.meeting_lights_3
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.meeting_lights_toggle
+    else:
+    - action: light.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - light.elgato_key_light_mini
+        - light.elgato_key_light_mini_2
+    - action: input_boolean.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.meeting_lights_toggle
+  mode: single
+- id: '1737654343468'
+  alias: Bed Frame Pico Actions
+  description: ''
+  use_blueprint:
+    path: coryginsberg/lutron_pico_5_button_actions.yaml
+    input:
+      pico_id: 2fa55cd019b0ae2f43171ee395c4011e
+      short_click_action_on:
+      - parallel:
+        - action: scene.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: scene.new_scene
+        - action: input_boolean.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.automatic_master_bedroom_lights
+        - action: switch.turn_off
+          metadata: {}
+          data: {}
+          target:
+            label_id: adaptive_lighting_sleep_mode
+      short_click_action_up:
+      - action: media_player.volume_up
+        metadata: {}
+        data: {}
+        target:
+          device_id: ed0c9faa47b48a7cdd5c4980ab88a738
+      short_click_action_stop:
+      - parallel:
+        - action: switch.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id:
+            - switch.adaptive_lighting_sleep_mode_bed_frame
+            - switch.adaptive_lighting_sleep_mode_ceiling_fan_lights
+            - switch.adaptive_lighting_sleep_mode_computer_desk
+            - switch.adaptive_lighting_sleep_mode_computer_shelf
+            - switch.adaptive_lighting_sleep_mode_master_bedroom
+            - switch.adaptive_lighting_adapt_brightness_ceiling_fan_lights
+            - switch.adaptive_lighting_adapt_color_ceiling_fan_lights
+            - switch.adaptive_lighting_ceiling_fan_lights
+            - switch.adaptive_lighting_sleep_mode_record_shelf
+        - action: media_player.play_media
+          target:
+            entity_id: media_player.corys_bedroom_2
+          data:
+            media_content_id: library://playlist/2
+            media_content_type: playlist
+          metadata:
+            title: Bedtime Beats
+            thumbnail:
+            media_class: playlist
+            children_media_class: track
+            navigateIds:
+            - {}
+            - media_content_type: music_assistant
+              media_content_id: playlists
+            - media_content_type: music
+              media_content_id: library://playlist/2
+        - action: media_player.shuffle_set
+          metadata: {}
+          data:
+            shuffle: true
+          target:
+            device_id:
+            - 11a9aadafd792c5e982a593015a33d95
+        - action: input_boolean.turn_off
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.automatic_master_bedroom_lights
+      - delay:
+          hours: 1
+          minutes: 0
+          seconds: 0
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - switch.adaptive_lighting_sleep_mode_bed_frame
+          - switch.adaptive_lighting_sleep_mode_ceiling_fan_lights
+          - switch.adaptive_lighting_sleep_mode_computer_desk
+          - switch.adaptive_lighting_sleep_mode_computer_shelf
+          - switch.adaptive_lighting_sleep_mode_master_bedroom
+          - switch.adaptive_lighting_sleep_mode_record_shelf
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.automatic_master_bedroom_lights
+      short_click_action_off:
+      - action: adaptive_lighting.change_switch_settings
+        metadata: {}
+        data:
+          use_defaults: current
+          entity_id: switch.adaptive_lighting_bed_frame
+          sleep_rgb_color:
+          - 211
+          - 131
+          - 1
+          sleep_brightness: '20'
+      - parallel:
+        - action: light.turn_off
+          metadata: {}
+          data: {}
+          target:
+            area_id:
+            - master_bedroom
+        - action: light.turn_off
+          metadata: {}
+          data: {}
+          target:
+            area_id: master_bathroom
+        - action: media_player.media_stop
+          metadata: {}
+          data: {}
+          target:
+            device_id: ed0c9faa47b48a7cdd5c4980ab88a738
+        - action: input_boolean.turn_off
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.automatic_master_bedroom_lights
+        - action: light.turn_off
+          metadata: {}
+          data: {}
+          target:
+            device_id: 01701caf3bd9c1d1f72fc733fdd99817
+        - action: input_boolean.turn_off
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.party_mode_toggle
+      - sequence:
+        - delay:
+            hours: 1
+            minutes: 0
+            seconds: 0
+        - action: input_boolean.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.automatic_master_bedroom_lights
+      short_click_action_down:
+      - action: media_player.volume_down
+        metadata: {}
+        data: {}
+        target:
+          device_id: ed0c9faa47b48a7cdd5c4980ab88a738
+      double_click_action_on:
+      - action: light.toggle
+        metadata: {}
+        data:
+          kelvin: 5708
+          brightness_pct: 65
+        target:
+          device_id: 01701caf3bd9c1d1f72fc733fdd99817
+      - sequence:
+        - delay:
+            hours: 0
+            minutes: 30
+            seconds: 0
+        - action: light.turn_off
+          metadata: {}
+          data: {}
+          target:
+            device_id: 01701caf3bd9c1d1f72fc733fdd99817
+      long_click_action_stop: []
+      double_click_action_stop:
+      - sequence:
+        - action: input_boolean.toggle
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.reading_mode
+        - if:
+          - condition: state
+            entity_id: input_boolean.reading_mode
+            state: 'on'
+          then:
+          - parallel:
+            - action: adaptive_lighting.change_switch_settings
+              metadata: {}
+              data:
+                use_defaults: current
+                entity_id: switch.adaptive_lighting_bed_frame
+                sleep_rgb_color:
+                - 128
+                - 128
+                - 128
+                sleep_brightness: '45'
+            - action: light.turn_on
+              metadata: {}
+              data:
+                kelvin: 3016
+                brightness_pct: 14
+              target:
+                device_id: 01701caf3bd9c1d1f72fc733fdd99817
+          else:
+          - parallel:
+            - action: light.turn_off
+              metadata: {}
+              target:
+                device_id: 01701caf3bd9c1d1f72fc733fdd99817
+              data: {}
+            - action: adaptive_lighting.change_switch_settings
+              metadata: {}
+              data:
+                use_defaults: current
+                entity_id: switch.adaptive_lighting_bed_frame
+                sleep_rgb_color:
+                - 211
+                - 131
+                - 1
+                sleep_brightness: '20'
+      delay_click: 401
+- id: '1737656077415'
+  alias: Double check bedroom humidity
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    hours: /1
+  conditions:
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - type: is_humidity
+        condition: device
+        device_id: 43a06318ab063564144dd2de12d2af4c
+        entity_id: fa462b19e5fadae01aecd8963f4334dd
+        domain: sensor
+        above: 30
+      - condition: device
+        type: is_on
+        device_id: feb2549dd98ec0abafb863c8254c7c56
+        entity_id: 357ad3feef879b4765e091968a639dd2
+        domain: switch
+    - condition: and
+      conditions:
+      - type: is_humidity
+        condition: device
+        device_id: 43a06318ab063564144dd2de12d2af4c
+        entity_id: fa462b19e5fadae01aecd8963f4334dd
+        domain: sensor
+        below: 29
+      - condition: device
+        type: is_off
+        device_id: feb2549dd98ec0abafb863c8254c7c56
+        entity_id: 357ad3feef879b4765e091968a639dd2
+        domain: switch
+      enabled: true
+    enabled: true
+  actions:
+  - sequence: []
+  - if:
+    - condition: device
+      type: is_off
+      device_id: feb2549dd98ec0abafb863c8254c7c56
+      entity_id: 2abe01284489557e8b5ef2278bf9501c
+      domain: humidifier
+    then:
+    - action: humidifier.toggle
+      metadata: {}
+      data: {}
+      target:
+        device_id:
+        - feb2549dd98ec0abafb863c8254c7c56
+    else:
+    - action: humidifier.toggle
+      metadata: {}
+      data: {}
+      target:
+        device_id:
+        - feb2549dd98ec0abafb863c8254c7c56
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 1
+    - action: humidifier.toggle
+      metadata: {}
+      data: {}
+      target:
+        device_id:
+        - feb2549dd98ec0abafb863c8254c7c56
+  mode: single
+- id: '1737742226723'
+  alias: Toggle Automatic Front Lights
+  description: ''
+  triggers:
+  - device_id: 45de833e3dd1786784cd62889e463a38
+    domain: zha
+    type: remote_button_double_press
+    subtype: Config
+    trigger: device
+  conditions: []
+  actions:
+  - parallel:
+    - alias: Flash LEDs
+      type: issue_all_led_effect
+      domain: zha
+      device_id: 45de833e3dd1786784cd62889e463a38
+      effect_type: Fast_Chase
+      level: 65
+      color: 24
+      duration: 3
+    - if:
+      - condition: state
+        entity_id: input_boolean.frunchroom_motion_lights_toggle
+        state: 'on'
+      then:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.frunchroom_motion_lights_toggle
+      - device_id: 45de833e3dd1786784cd62889e463a38
+        domain: number
+        entity_id: 722be3cb0c3df97c1046af49a4cbe9b8
+        type: set_value
+        value: 220
+      else:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.frunchroom_motion_lights_toggle
+      - device_id: 45de833e3dd1786784cd62889e463a38
+        domain: number
+        entity_id: 722be3cb0c3df97c1046af49a4cbe9b8
+        type: set_value
+        value: 160
+  mode: single
+- id: '1738380661157'
+  alias: Bed Frame Color Loop
+  description: ''
+  use_blueprint:
+    path: mdolnik/color_loop.yaml
+    input:
+      light: light.bed_frame_light_strip
+      color_1:
+      - 0
+      - 255
+      - 0
+      color_2:
+      - 0
+      - 255
+      - 255
+      color_3:
+      - 255
+      - 128
+      - 255
+      color_4:
+      - 0
+      - 255
+      - 255
+      color_5:
+      - 0
+      - 0
+      - 0
+      color_6:
+      - 0
+      - 0
+      - 0
+      color_7:
+      - 0
+      - 0
+      - 0
+      color_8:
+      - 0
+      - 0
+      - 0
+      color_9:
+      - 0
+      - 0
+      - 0
+      color_10:
+      - 0
+      - 0
+      - 0
+      helper_toggle: input_boolean.party_mode_toggle
+      max_color_distance: 30
+- id: '1738381036371'
+  alias: Record Shelf Color Loop
+  description: ''
+  use_blueprint:
+    path: mdolnik/color_loop.yaml
+    input:
+      light: light.tzb210_tmi0rihb_ts0505b_light
+      color_1:
+      - 0
+      - 255
+      - 0
+      color_2:
+      - 0
+      - 255
+      - 255
+      color_3:
+      - 255
+      - 128
+      - 255
+      color_4:
+      - 0
+      - 255
+      - 255
+      color_5:
+      - 0
+      - 0
+      - 0
+      color_6:
+      - 0
+      - 0
+      - 0
+      color_7:
+      - 0
+      - 0
+      - 0
+      color_8:
+      - 0
+      - 0
+      - 0
+      color_9:
+      - 0
+      - 0
+      - 0
+      color_10:
+      - 0
+      - 0
+      - 0
+      helper_toggle: input_boolean.party_mode_toggle
+      max_color_distance: 30
+      transition:
+        hours: 0
+        minutes: 0
+        seconds: 10
+- id: '1738381285681'
+  alias: Computer Shelf Color Loop
+  description: ''
+  use_blueprint:
+    path: mdolnik/color_loop.yaml
+    input:
+      light: light.computer_shelf
+      color_1:
+      - 0
+      - 255
+      - 0
+      color_2:
+      - 0
+      - 255
+      - 255
+      color_3:
+      - 255
+      - 128
+      - 255
+      color_4:
+      - 0
+      - 255
+      - 255
+      color_5:
+      - 0
+      - 0
+      - 0
+      color_6:
+      - 0
+      - 0
+      - 0
+      color_7:
+      - 0
+      - 0
+      - 0
+      color_8:
+      - 0
+      - 0
+      - 0
+      color_9:
+      - 0
+      - 0
+      - 0
+      color_10:
+      - 0
+      - 0
+      - 0
+      helper_toggle: input_boolean.party_mode_toggle
+      max_color_distance: 20
+      transition:
+        hours: 0
+        minutes: 0
+        seconds: 30
+- id: '1739558897530'
+  alias: Apple Focus Automation
+  description: ''
+  triggers:
+  - trigger: webhook
+    allowed_methods:
+    - POST
+    - PUT
+    local_only: false
+    webhook_id: -apple-focus-trigger
+    id: trigger
+  conditions: []
+  actions:
+  - variables:
+      state: '{{ trigger.json.state | default(''None'') }}'
+  - if:
+    - condition: template
+      value_template: '{{ state != '''' }}'
+    then:
+    - action: input_select.select_option
+      metadata: {}
+      data:
+        option: '{{ state }}'
+      target:
+        entity_id: input_select.focus_states
+    else:
+    - action: input_select.select_option
+      metadata: {}
+      data:
+        option: None
+      target:
+        entity_id: input_select.focus_states
+  mode: single
+- id: '1739897331113'
+  alias: Focus Mode Switch
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_select.focus_states
+    to:
+  conditions:
+  - condition: zone
+    entity_id: device_tracker.corys_iphone
+    zone: zone.home
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_select.focus_states
+        state: None
+      sequence:
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 294b7f51608365609ed6149b99d21837
+          - 2af29fe40e4a9999f0509b2c29138088
+          - 01701caf3bd9c1d1f72fc733fdd99817
+    - conditions:
+      - condition: state
+        entity_id: input_select.focus_states
+        state: Fitness
+      sequence:
+      - device_id: 5a929c2e71d4b3e1d762397b977c76b0
+        domain: climate
+        entity_id: b206a8d12fcaa2f0d7427e40f28db361
+        type: set_preset_mode
+        preset_mode: Workout
+    - conditions:
+      - condition: state
+        entity_id: input_select.focus_states
+        state: Work
+      sequence:
+      - device_id: 5a929c2e71d4b3e1d762397b977c76b0
+        domain: climate
+        entity_id: b206a8d12fcaa2f0d7427e40f28db361
+        type: set_preset_mode
+        preset_mode: home
+    - conditions:
+      - condition: state
+        entity_id: input_select.focus_states
+        state: Meeting
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: scene.meeting_lights_3
+    - conditions:
+      - condition: state
+        entity_id: input_select.focus_states
+        state: Night
+      sequence:
+      - device_id: 5a929c2e71d4b3e1d762397b977c76b0
+        domain: climate
+        entity_id: b206a8d12fcaa2f0d7427e40f28db361
+        type: set_preset_mode
+        preset_mode: sleep
+    - conditions:
+      - condition: state
+        entity_id: input_select.focus_states
+        state: Sleep
+      sequence:
+      - device_id: 5a929c2e71d4b3e1d762397b977c76b0
+        domain: climate
+        entity_id: b206a8d12fcaa2f0d7427e40f28db361
+        type: set_preset_mode
+        preset_mode: sleep
+  mode: single
+- id: '1741282183503'
+  alias: Bedroom Party Mode
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_boolean.party_mode_toggle
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: input_boolean.party_mode_toggle
+      state: 'on'
+    then:
+    - action: light.turn_on
+      metadata: {}
+      data:
+        rgb_color:
+        - 246
+        - 9
+        - 255
+        brightness_pct: 100
+      target:
+        device_id: eb6bb9b4127c1daae28dc2becbb8c91e
+    - action: light.turn_on
+      metadata: {}
+      data:
+        rgb_color:
+        - 0
+        - 238
+        - 255
+        brightness_pct: 100
+      target:
+        device_id:
+        - 6aa5dcf81a197d0dd5b38f526f3fb2cc
+    - action: light.turn_on
+      metadata: {}
+      data:
+        rgb_color:
+        - 33
+        - 255
+        - 32
+        brightness_pct: 100
+      target:
+        device_id:
+        - fe5dedd3486528d57fa8c39ba4b6a2a6
+    - action: input_boolean.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.automatic_master_bedroom_lights
+    - action: light.turn_on
+      metadata: {}
+      data:
+        brightness_pct: 25
+        rgb_color:
+        - 255
+        - 124
+        - 24
+      target:
+        device_id: 471d34284ece3a5bf659b715eb871027
+    else:
+    - action: light.turn_on
+      metadata: {}
+      data:
+        brightness_pct: 100
+        kelvin: 3895
+      target:
+        entity_id: light.ceiling_fan_lights
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.automatic_master_bedroom_lights
+    - action: adaptive_lighting.set_manual_control
+      metadata: {}
+      data:
+        manual_control: false
+        lights:
+        - light.computer_shelf
+    - action: adaptive_lighting.set_manual_control
+      metadata: {}
+      data:
+        manual_control: false
+        lights:
+        - light.desk_lightstrip_light
+    - action: adaptive_lighting.set_manual_control
+      metadata: {}
+      data:
+        manual_control: false
+        lights:
+        - light.tzb210_tmi0rihb_ts0505b_light
+    - action: adaptive_lighting.set_manual_control
+      metadata: {}
+      data:
+        manual_control: false
+        lights:
+        - light.ceiling_fan_lights
+    - action: adaptive_lighting.set_manual_control
+      metadata: {}
+      data:
+        manual_control: false
+        lights:
+        - light.bed_frame_light_strip
+  mode: single

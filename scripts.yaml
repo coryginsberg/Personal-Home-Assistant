@@ -1,0 +1,350 @@
+increase_left_key_light:
+  mode: single
+  icon: mdi:lightbulb-on-60
+  variables:
+    transition_time: 300
+    brightness_step: 2
+    initial_brightness_pct: 0
+    target_brightness_pct: 100
+    light_entity: light.elgato_key_light_mini
+    left_kelvin: 4700
+    right_kelvin: 5700
+  sequence:
+  - variables:
+      target_brightness: '{{ (target_brightness_pct * 255 / 100) | round }}'
+      initial_brightness: '{{ (initial_brightness_pct * 255 / 100) | round | int }}'
+      required_steps: "{{\n  (((target_brightness_pct - initial_brightness_pct) /\n
+        \ brightness_step)) | round | int | abs\n}}"
+      delay_between_steps: '{{ (transition_time / required_steps) | round | int |
+        abs }}'
+      brightness_step: '{% if (initial_brightness > target_brightness) -%} {{ brightness_step
+        * (-1) }} {%- else -%} {{ brightness_step }} {%- endif %}'
+  - alias: Increase Brightness
+    parallel:
+    - alias: Increase Left Light Brightness
+      sequence:
+      - data:
+          brightness: '{{ initial_brightness }}'
+          kelvin: '{{ left_kelvin }}'
+          transition: 0
+        entity_id: light.elgato_key_light_mini
+        action: light.turn_on
+      - repeat:
+          until:
+          - condition: or
+            conditions:
+            - condition: template
+              value_template: '{% if (brightness_step > 0) -%} {{ state_attr(light_entity,
+                "brightness") | int(0) >= target_brightness }} {%- else -%} {{ state_attr(light_entity,
+                "brightness") | int(0) <= target_brightness }} {%- endif %}'
+            - condition: template
+              value_template: '{{ (repeat.first is false) and (is_state(light_entity,"off"))}}'
+          sequence:
+          - data:
+              transition: 0
+              brightness_step_pct: '{{ brightness_step }}'
+              kelvin: '{{left_kelvin}}'
+            entity_id: light.elgato_key_light_mini
+            action: light.turn_on
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: '{{ delay_between_steps }}'
+              milliseconds: 0
+          - condition: and
+            conditions:
+            - condition: state
+              entity_id: light.elgato_key_light_mini
+              attribute: color_temp_kelvin
+              state: '{{ left_kelvin }}'
+            - condition: state
+              entity_id: light.elgato_key_light_mini_2
+              attribute: color_temp_kelvin
+              state: '{{ right_kelvin }}'
+    - alias: Increase Right Light Brightness
+      sequence:
+      - data:
+          brightness: '{{ initial_brightness }}'
+          kelvin: '{{ right_kelvin }}'
+          transition: 0
+        entity_id: light.elgato_key_light_mini_2
+        action: light.turn_on
+      - repeat:
+          until:
+          - condition: or
+            conditions:
+            - condition: template
+              value_template: '{% if (brightness_step > 0) -%} {{ state_attr(light_entity,
+                "brightness") | int(0) >= target_brightness }} {%- else -%} {{ state_attr(light_entity,
+                "brightness") | int(0) <= target_brightness }} {%- endif %}'
+            - condition: template
+              value_template: '{{ (repeat.first is false) and (is_state(light_entity,"off"))}}'
+          sequence:
+          - data:
+              transition: 0
+              brightness_step_pct: '{{ brightness_step }}'
+              kelvin: '{{right_kelvin}}'
+            entity_id: light.elgato_key_light_mini_2
+            action: light.turn_on
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: '{{ delay_between_steps }}'
+              milliseconds: 0
+          - condition: and
+            conditions:
+            - condition: state
+              entity_id: light.elgato_key_light_mini
+              attribute: color_temp_kelvin
+              state: '{{ left_kelvin }}'
+            - condition: state
+              entity_id: light.elgato_key_light_mini_2
+              attribute: color_temp_kelvin
+              state: '{{ right_kelvin }}'
+    enabled: true
+  alias: Increase Key Light Brightness
+  description: ''
+decrease_key_light_brightness:
+  sequence:
+  - variables:
+      target_brightness: '{{ (target_brightness_pct * 255 / 100) | round }}'
+      initial_brightness: '{{ (initial_brightness_pct * 255 / 100) | round | int }}'
+      required_steps: "{{\n  (((target_brightness_pct - initial_brightness_pct) /\n
+        \ brightness_step)) | round | int | abs\n}}"
+      delay_between_steps: '{{ (transition_time / required_steps) | round | int |
+        abs }}'
+      brightness_step: '{% if (initial_brightness > target_brightness) -%} {{ brightness_step
+        * (-1) }} {%- else -%} {{ brightness_step }} {%- endif %}'
+  - parallel:
+    - alias: Decrease Left Light Brightness
+      sequence:
+      - data:
+          brightness: '{{ initial_brightness }}'
+          kelvin: '{{ left_kelvin }}'
+          transition: 0
+        entity_id: light.elgato_key_light_mini
+        action: light.turn_on
+      - repeat:
+          until:
+          - condition: or
+            conditions:
+            - condition: template
+              value_template: '{% if (brightness_step > 0) -%} {{ state_attr(light_entity,
+                "brightness") | int(0) >= target_brightness }} {%- else -%} {{ state_attr(light_entity,
+                "brightness") | int(0) <= target_brightness }} {%- endif %}'
+            - condition: template
+              value_template: '{{ (repeat.first is false) and (is_state(light_entity,"off"))}}'
+          sequence:
+          - data:
+              transition: 0
+              brightness_step_pct: '{{ brightness_step }}'
+              kelvin: '{{left_kelvin}}'
+            entity_id: light.elgato_key_light_mini
+            action: light.turn_on
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: '{{ delay_between_steps }}'
+              milliseconds: 0
+          - condition: and
+            conditions:
+            - condition: state
+              entity_id: light.elgato_key_light_mini
+              attribute: color_temp_kelvin
+              state: '{{ left_kelvin }}'
+            - condition: state
+              entity_id: light.elgato_key_light_mini_2
+              attribute: color_temp_kelvin
+              state: '{{ right_kelvin }}'
+    - alias: Decrease Right Light Brightness
+      sequence:
+      - data:
+          brightness: '{{ initial_brightness }}'
+          kelvin: '{{ right_kelvin }}'
+          transition: 0
+        entity_id: light.elgato_key_light_mini_2
+        action: light.turn_on
+      - repeat:
+          until:
+          - condition: or
+            conditions:
+            - condition: template
+              value_template: '{% if (brightness_step > 0) -%} {{ state_attr(light_entity,
+                "brightness") | int(0) >= target_brightness }} {%- else -%} {{ state_attr(light_entity,
+                "brightness") | int(0) <= target_brightness }} {%- endif %}'
+            - condition: template
+              value_template: '{{ (repeat.first is false) and (is_state(light_entity,"off"))}}'
+          sequence:
+          - data:
+              transition: 0
+              brightness_step_pct: '{{ brightness_step }}'
+              kelvin: '{{right_kelvin}}'
+            entity_id: light.elgato_key_light_mini_2
+            action: light.turn_on
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: '{{ delay_between_steps }}'
+              milliseconds: 0
+          - condition: and
+            conditions:
+            - condition: state
+              entity_id: light.elgato_key_light_mini
+              attribute: color_temp_kelvin
+              state: '{{ left_kelvin }}'
+            - condition: state
+              entity_id: light.elgato_key_light_mini_2
+              attribute: color_temp_kelvin
+              state: '{{ right_kelvin }}'
+    enabled: true
+  mode: single
+  icon: mdi:lightbulb-on-60
+  variables:
+    transition_time: 180
+    brightness_step: 2
+    initial_brightness_pct: 100
+    target_brightness_pct: 0
+    light_entity: light.elgato_key_light_mini
+    left_kelvin: 4700
+    right_kelvin: 5700
+  alias: Decrease Key Light Brightness
+  description: ''
+30_minute_light_therapy:
+  sequence:
+  - action: script.increase_left_key_light
+    metadata: {}
+    data: {}
+    enabled: true
+  - delay:
+      hours: 0
+      minutes: 25
+      seconds: 0
+  - condition: and
+    conditions:
+    - condition: device
+      type: is_on
+      device_id: 294b7f51608365609ed6149b99d21837
+      entity_id: e74dd0704fb30cbdd0adc38649a0f525
+      domain: light
+      for:
+        hours: 0
+        minutes: 25
+        seconds: 0
+    - condition: device
+      type: is_on
+      device_id: 2af29fe40e4a9999f0509b2c29138088
+      entity_id: 2923e6268edbaea8f5c30d828b5380fa
+      domain: light
+      for:
+        hours: 0
+        minutes: 25
+        seconds: 0
+    - condition: numeric_state
+      entity_id: light.elgato_key_light_mini
+      attribute: brightness
+      above: 245
+    - condition: numeric_state
+      entity_id: light.elgato_key_light_mini_2
+      attribute: brightness
+      above: 245
+    - condition: numeric_state
+      entity_id: light.elgato_key_light_mini
+      attribute: color_temp_kelvin
+      above: 4650
+      below: 5750
+    - condition: numeric_state
+      entity_id: light.elgato_key_light_mini_2
+      attribute: color_temp_kelvin
+      above: 4650
+      below: 5750
+  - action: script.decrease_key_light_brightness
+    metadata: {}
+    data: {}
+  alias: 30 Minute Light Therapy
+  description: ''
+  icon: mdi:sun-clock
+  mode: restart
+wakeup_light:
+  alias: Wakeup Light
+  use_blueprint:
+    path: Mirai-Miki/ha_light_transition_blueprint.yaml
+    input:
+      color_mode: Temperature
+      initial_temp: 6500
+      target_temp: 3500
+      light_entity: light.ceiling_fan_lights
+      transition_time:
+        hours: 0
+        minutes: 2
+        seconds: 40
+      step_time: 3
+  description: ''
+living_room_relax:
+  sequence:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.2
+    target:
+      entity_id:
+      - media_player.living_room
+      - media_player.music_assistant_living_room_sonos_2
+  - action: media_player.shuffle_set
+    metadata: {}
+    data:
+      shuffle: true
+    target:
+      device_id: 69524592881f2374f60d6c0f584e96fd
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.music_assistant_living_room_sonos_2
+    data:
+      media_content_id: library://playlist/1
+      media_content_type: playlist
+    metadata:
+      title: BEATstrumentals
+      thumbnail:
+      media_class: playlist
+      children_media_class: track
+      navigateIds:
+      - {}
+      - media_content_type: music_assistant
+        media_content_id: playlists
+      - media_content_type: music
+        media_content_id: library://playlist/1
+  - type: turn_on
+    device_id: 45de833e3dd1786784cd62889e463a38
+    entity_id: 3d2330e22eeaca2a135298de6e746f2f
+    domain: light
+    brightness_pct: 60
+  alias: Living Room Relax
+  description: ''
+reset_living_room:
+  sequence:
+  - action: media_player.media_pause
+    metadata: {}
+    data: {}
+    target:
+      device_id: 66aac23e27d53e0027cff4a783a04d5b
+  - type: turn_on
+    device_id: 45de833e3dd1786784cd62889e463a38
+    entity_id: 3d2330e22eeaca2a135298de6e746f2f
+    domain: light
+    brightness_pct: 100
+  - type: turn_off
+    device_id: 98e20c4341b40ba12f0e371ba3917f2d
+    entity_id: 34b4fdfed6440fca43f2a25c7385445f
+    domain: remote
+  alias: Reset Living Room
+  description: ''
+test_weather_script:
+  sequence:
+  - action: weather.get_forecasts
+    metadata: {}
+    data:
+      type: daily
+    target:
+      device_id: 594bc0f484d59b52a5d00122bf96b4eb
+    response_variable: forecast
+  alias: Test Weather Script
+  description: ''

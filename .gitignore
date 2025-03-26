@@ -1,0 +1,15 @@
+*.pem
+*.log*
+*.conf
+/tts
+/www
+/themes
+/custom_components
+/secrets.yaml
+.cloud/
+.storage/
+.HA_VERSION
+zigbee.db
+zigbee.db-shm
+zigbee.db-wal
+home-assistant_v2.*

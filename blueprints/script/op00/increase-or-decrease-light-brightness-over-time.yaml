@@ -1,0 +1,141 @@
+blueprint:
+  name: Increase or decrease light brightness over time
+  description: "# Increase or decrease light brightness over time\n\nThis script increases
+    or decreases the brightness of a light over time. \nGiven the **transition time**,
+    **initial brightness**, **target brightness** and **brightness step**, the script
+    will calculate the number of steps required to reach the target brightness and
+    the delay between each step. \nThe script will then turn on the light with the
+    initial brightness, then start increasing or decreasing the brightness by the
+    brightness step every delay between steps until the target brightness is reached
+    or the light has been turned off mid execution.   \n\n```text\nExample: (increase)\n
+    \                     100% ┌────────────────────────────────────────────────────────────────────────────────────────────┐\n
+    \                          │                                                                                            │\n
+    \                          │                                                                                            │\n
+    \                          │                                                                                          ┌
+    ◄─ target brightness\n                           │                                                                                          │
+    │\n                           │                                                                                          │
+    │\n                           │                                                                         ┌────────────────┘
+    │ \n                           │                                                                         │
+    \                 │\n                           │                                                                         │
+    \                 │\n                           │                                                       ┌─────────────────┘
+    \                 │\n                           │                     calculated
+    delay                  │                                    │\n                           │
+    \                           │                          │                                    │\n
+    \                          │                            │        ┌─────────────────┘
+    \                                   │\n                           │                            │
+    \       │                                                      │\n                           │
+    \                           ▼        │                                                      │\n
+    \                          │                   ┌─────────────────┘                                                      │\n
+    \                          │                   │ ◄──────────── brightness step
+    \                                         │\n                           │                   │
+    \                                                                       │\n       initial
+    brightness ──►┌─────────────────┘                                                                        │\n
+    \                          │ │                                                                                          │\n
+    \                          │ │                                                                                          │\n
+    \                       0% └─┴◄───────────────────────────────────────────────────────────────────────────────────────►─┘\n
+    \                          0s                                     transition time
+    \  \n\n\n```\n### Notes / Calculations\n- _avoid short and low brightness steps
+    to reduces turn_on light service calls_\n- _steps = (target brightness - initial
+    brightness) / brightness step_\n- _delay = transition_time / steps_\n"
+  domain: script
+  author: op00
+  source_url: https://community.home-assistant.io/t/increase-or-decrease-light-brightness-over-time/600349
+  input:
+    light_entity:
+      name: Light Entity
+      description: Select your light
+      selector:
+        entity:
+          filter:
+          - domain:
+            - light
+          multiple: false
+    transition_time:
+      name: Transition Time
+      description: From 1 minute up to 1 hour
+      default: 120
+      selector:
+        number:
+          min: 60.0
+          max: 3600.0
+          step: 1.0
+          unit_of_measurement: seconds
+          mode: slider
+    target_brightness:
+      name: Target Brightness
+      description: if you want to dimm the lights, this needs to be lower than initial
+        brightness
+      default: 100
+      selector:
+        number:
+          min: 0.0
+          max: 100.0
+          step: 1.0
+          unit_of_measurement: '%'
+          mode: slider
+    initial_brightness:
+      name: Initial Brightness
+      description: if you want to dimm the lights, this needs to be higher than target
+        brightness
+      default: 0
+      selector:
+        number:
+          min: 0.0
+          max: 100.0
+          step: 1.0
+          unit_of_measurement: '%'
+          mode: slider
+    brightness_step:
+      name: Brightness Step
+      description: default is 2%, if target brightness is lower than initial brightness,
+        it's negative
+      default: 2
+      selector:
+        number:
+          min: 1.0
+          max: 100.0
+          step: 1.0
+          unit_of_measurement: '%'
+          mode: slider
+mode: single
+icon: mdi:lightbulb-on-60
+variables:
+  transition_time: !input transition_time
+  brightness_step: !input brightness_step
+  initial_brightness_pct: !input initial_brightness
+  target_brightness_pct: !input target_brightness
+  light_entity: !input light_entity
+sequence:
+- variables:
+    target_brightness: '{{(target_brightness_pct * 255 / 100)|round}}'
+    initial_brightness: '{{(initial_brightness_pct * 255 / 100)|round}}'
+    required_steps: '{{(((target_brightness_pct - initial_brightness_pct) / brightness_step))|round|int|abs}}'
+    delay_between_steps: '{{ (transition_time / required_steps)|round|int|abs }}'
+    brightness_step: '{% if (initial_brightness > target_brightness) -%} {{ brightness_step
+      * (-1) }} {%- else -%} {{ brightness_step }} {%- endif %}'
+- service: light.turn_on
+  data:
+    brightness: '{{ initial_brightness }}'
+    transition: 0
+  entity_id: !input light_entity
+- repeat:
+    until:
+    - condition: or
+      conditions:
+      - condition: template
+        value_template: '{% if (brightness_step > 0) -%} {{ state_attr(light_entity,
+          "brightness") | int(0) >= target_brightness }} {%- else -%} {{ state_attr(light_entity,
+          "brightness") | int(0) <= target_brightness }} {%- endif %}'
+      - condition: template
+        value_template: '{{ (repeat.first is false) and (is_state(light_entity,"off"))}}'
+    sequence:
+    - service: light.turn_on
+      data:
+        transition: 0
+        brightness_step_pct: '{{ brightness_step }}'
+      entity_id: !input light_entity
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: '{{ delay_between_steps }}'
+        milliseconds: 0

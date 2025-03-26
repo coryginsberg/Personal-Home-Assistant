@@ -1,0 +1,127 @@
+- trigger:
+    - trigger: webhook
+      allowed_methods:
+        - POST
+        - PUT
+      local_only: false
+      webhook_id: "apple-focus-trigger"
+- trigger:
+    - trigger: state
+      entity_id:
+        - sensor.weight_gurus_cory_ginsberg_weight
+    - trigger: time_pattern
+      minutes: "/5"
+  sensor:
+    - name: Last Recorded Weigh In
+      state: "{{ relative_time(state_attr('sensor.weight_gurus_cory_ginsberg_weight', 'entryTimestamp')) }} ago"
+
+# Get Weather Forecast
+- trigger:
+    - trigger: time_pattern
+      minutes: /30
+  action:
+    - action: weather.get_forecasts
+      data:
+        type: daily
+      target:
+        entity_id:
+          - weather.lincoln_ave_weather
+          - weather.forecast_home
+      response_variable: my_daily
+  sensor:
+    - name: "Focus state"
+      state: "{{ trigger.json }}"
+    - name: "Today's High"
+      unique_id: temp_today
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[0].temperature }}"
+    - name: "Today's Low"
+      unique_id: low_today
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[0].templow }}"
+    - name: "Today's Condition"
+      unique_id: condition_today
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[0].condition }}"
+    - name: "Tomorrow's High"
+      unique_id: temp_tomorrow
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[1].temperature }}"
+    - name: "Tomorrow's Low"
+      unique_id: low_tomorrow
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[1].templow }}"
+    - name: "Tomorrow's Condition"
+      unique_id: condition_tomorrow
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[1].condition }}"
+    - name: "Tomorrow's date"
+      unique_id: day_of_week_tomorrow
+      state: >
+        {% set iso_timestamp = my_daily['weather.lincoln_ave_weather'].forecast[1].datetime %}
+        {% set dt = as_datetime(iso_timestamp) %}
+        {{ dt.strftime('%a') }}
+    - name: "2 day's High"
+      unique_id: temp_2days
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[2].temperature }}"
+    - name: "2 day's Low"
+      unique_id: low_2days
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[2].templow }}"
+    - name: "2 day's Condition"
+      unique_id: condition_2days
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[2].condition }}"
+    - name: "2 day's date"
+      unique_id: day_of_week_2days
+      state: >
+        {% set iso_timestamp = my_daily['weather.lincoln_ave_weather'].forecast[2].datetime %}
+        {% set dt = as_datetime(iso_timestamp) %}
+        {{ dt.strftime('%a') }}
+    - name: "3 day's High"
+      unique_id: temp_3days
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[3].temperature }}"
+    - name: "3 day's Low"
+      unique_id: low_3days
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[3].templow }}"
+    - name: "3 day's Condition"
+      unique_id: condition_3days
+      state: "{{ my_daily['weather.lincoln_ave_weather'].forecast[3].condition }}"
+    - name: "3 day's date"
+      unique_id: day_of_week_3days
+      state: >
+        {% set iso_timestamp = my_daily['weather.lincoln_ave_weather'].forecast[3].datetime %}
+        {% set dt = as_datetime(iso_timestamp) %}
+        {{ dt.strftime('%a') }}
+# Get Next Event
+- trigger:
+    - trigger: time_pattern
+      minutes: /5
+  sensor:
+    - name: "Next Calendar Event"
+      state: >
+        {{ state_attr('calendar.cory_ginsberg1_gmail_com', 'message') if 
+          (state_attr('calendar.cory_ginsberg1_gmail_com', 'all_day') == false) and 
+          ((state_attr('calendar.meta_local', 'all_day') == true) or 
+            ((state_attr('calendar.cory_ginsberg1_gmail_com', 'start_time') | as_timestamp) < 
+            (state_attr('calendar.meta_local', 'start_time') | as_timestamp)))
+          else (state_attr('calendar.meta_local', 'message') if 
+                (state_attr('calendar.meta_local', 'all_day') == false) 
+                else "No upcoming events (that's weird)") }}
+    - name: "Next Calendar Event Time"
+      state: >
+        {{ state_attr('calendar.cory_ginsberg1_gmail_com', 'start_time') if 
+          (state_attr('calendar.cory_ginsberg1_gmail_com', 'all_day') == false) and 
+          ((state_attr('calendar.meta_local', 'all_day') == true) or 
+            ((state_attr('calendar.cory_ginsberg1_gmail_com', 'start_time') | as_timestamp) < 
+            (state_attr('calendar.meta_local', 'start_time') | as_timestamp)))
+          else (state_attr('calendar.meta_local', 'start_time') if 
+                (state_attr('calendar.meta_local', 'all_day') == false) 
+                else "00:00:00") }}
+- trigger:
+    - trigger: time_pattern
+      minutes: /15
+  sensor:
+    - name: "Next Calendar Event String"
+      state: >
+        {%
+          if now().strftime('%Y-%m-%d') == states('sensor.next_calendar_event_time').split(' ')[0]
+        %}
+          {% set event_name = states('sensor.next_calendar_event') %}
+          {% set event_time = states('sensor.next_calendar_event_time') %}
+          {{ event_name | truncate(25)  }} @ {{ strptime(event_time, '%Y-%m-%d %H:%M:%S', '00:00:00') | as_timestamp | timestamp_custom("%I:%M %p", true, "NaN") }}
+        {% else %}
+          No (more) events today
+        {% endif %}
