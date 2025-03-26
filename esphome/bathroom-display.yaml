@@ -366,12 +366,12 @@ display:
       int top_row = 564; int middle_row = 595; int bottom_row = 643; int bottom_bottom_row = 673;
       it.print(day0_x, top_row, id(font_light), color_black, TextAlign::TOP_CENTER, "Tod");
       it.printf(day0_x, middle_row, id(material_icon_weather), color_black, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_0).state.c_str()].c_str());
-      it.printf(day0_x, bottom_row, id(font_small_bold), color_light_gray, TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_0).state.c_str());
-      it.printf(day0_x, bottom_bottom_row, id(font_small), color_light_gray, TextAlign::TOP_CENTER, "%s°F", id(weather_low_0).state.c_str());
+      it.printf(day0_x, bottom_row, id(font_small_bold), color_black, TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_0).state.c_str());
+      it.printf(day0_x, bottom_bottom_row, id(font_small), color_black, TextAlign::TOP_CENTER, "%s°F", id(weather_low_0).state.c_str());
       it.print(day1_x, top_row, id(font_light), color_black, TextAlign::TOP_CENTER, "Tom");
       it.printf(day1_x, middle_row, id(material_icon_weather), color_black, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_1).state.c_str()].c_str());
-      it.printf(day1_x, bottom_row, id(font_small_bold), color_dark_gray, TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_1).state.c_str());
-      it.printf(day1_x, bottom_bottom_row, id(font_small), color_dark_gray, TextAlign::TOP_CENTER, "%s°F", id(weather_low_1).state.c_str());
+      it.printf(day1_x, bottom_row, id(font_small_bold), color_black, TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_1).state.c_str());
+      it.printf(day1_x, bottom_bottom_row, id(font_small), color_black, TextAlign::TOP_CENTER, "%s°F", id(weather_low_1).state.c_str());
       it.printf(day2_x, top_row, id(font_light), color_black, TextAlign::TOP_CENTER, "%s", id(weather_timestamp_2).state.c_str());
       it.printf(day2_x, middle_row, id(material_icon_weather), color_black, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_condition_2).state.c_str()].c_str());
       it.printf(day2_x, bottom_row, id(font_small_bold), color_black, TextAlign::TOP_CENTER, "%s°F", id(weather_temperature_2).state.c_str());
