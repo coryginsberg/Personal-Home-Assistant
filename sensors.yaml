@@ -1,7 +1,1 @@
-- platform: statistics
-  entity_id: sensor.weight_gurus_cory_ginsberg_weight
-  name: "Weight Trend"
-  unique_id: weight_trend
-  state_characteristic: change
-  max_age:
-    days: 14
+

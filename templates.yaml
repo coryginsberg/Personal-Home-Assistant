@@ -8,12 +8,13 @@
 - trigger:
     - trigger: state
       entity_id:
-        - sensor.weight_gurus_cory_ginsberg_weight
+        - sensor.scale_weight
     - trigger: time_pattern
-      minutes: "/5"
+      minutes: "/1"
   sensor:
     - name: Last Recorded Weigh In
-      state: "{{ relative_time(state_attr('sensor.weight_gurus_cory_ginsberg_weight', 'entryTimestamp')) }} ago"
+      unique_id: last_recorded_weigh_in
+      state: "{{ relative_time(states.sensor.scale_weight.last_changed) }} ago"
 
 # Get Weather Forecast
 - trigger:

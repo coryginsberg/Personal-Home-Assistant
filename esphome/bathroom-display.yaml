@@ -8,18 +8,14 @@ esphome:
       - component.update: ha_time
       - wait_until:
           condition:
-            all: 
-              - api.connected:
-              - time.has_time:
-          timeout: 120s
+            lambda: 'return id(data_updated) == true;'
+          timeout: 60s
       - if:
           condition:
-            not: 
-              api.connected:
+            lambda: 'return id(data_updated) == false;'
           then:
             - switch.turn_on: enable_pin
       - delay: 10s
-      - lambda: 'id(initial_data_received) = true;'
       - script.execute: update_screen
   includes:
     - fonts/bathroom_display_icon_maps.h
@@ -32,8 +28,8 @@ esp32:
 
 # Enable logging
 logger:
-  baud_rate: 0
-  level: NONE
+  # baud_rate: 0
+  # level: NONE
 
 # Enable Home Assistant API
 api:
@@ -72,29 +68,9 @@ switch:
 
 ################################################################################
 
-button:
-  - platform: template
-    name: "E Ink - Refresh Screen"
-    entity_category: config
-    on_press:
-      - script.execute: update_screen
-  - platform: template
-    name: "E Ink - Clear Screen"
-    entity_category: config
-    on_press:
-      - script.execute: clear_screen
-
 # Global variables for detecting if the display needs to be refreshed. (Thanks @paviro!)
 globals:
   - id: data_updated
-    type: bool
-    restore_value: no
-    initial_value: 'false'
-  - id: data_screen_off
-    type: bool
-    restore_value: no
-    initial_value: 'false'
-  - id: initial_data_received
     type: bool
     restore_value: no
     initial_value: 'false'
@@ -108,17 +84,9 @@ script:
   - id: update_screen
     then:
       - lambda: 'id(data_updated) = false;'
-      - lambda: 'id(data_screen_off) = false;'
       - component.update: epaper_display
       - lambda: 'id(recorded_display_refresh) += 1;'
-      - delay: 5s
-      - switch.turn_on: enable_pin
-  - id: clear_screen
-    then:
-      - lambda: 'id(data_updated) = false;'
-      - lambda: 'id(data_screen_off) = true;'
-      - component.update: epaper_display
-      - lambda: 'id(recorded_display_refresh) += 1;'
+      - lambda: 'id(display_last_update).publish_state(id(ha_time).now().timestamp);'
       - delay: 5s
       - switch.turn_on: enable_pin
 
@@ -207,21 +175,45 @@ image:
 
 sensor:
   - platform: homeassistant
-    entity_id: sensor.weight_gurus_cory_ginsberg_weight
+    entity_id: sensor.scale_weight
     id: current_weight
   - platform: homeassistant
     entity_id: sensor.weight_trend
     id: weight_trend
+  - platform: template
+    name: "Display Last Update"
+    device_class: timestamp
+    entity_category: "diagnostic"
+    id: display_last_update
+  - platform: template
+    name: "Recorded Display Refresh"
+    accuracy_decimals: 0
+    unit_of_measurement: "Refreshes"
+    state_class: "total_increasing"
+    entity_category: "diagnostic"
+    lambda: 'return id(recorded_display_refresh);'
+  - platform: wifi_signal
+    name: "WiFi Signal Strength"
+    id: wifisignal
+    unit_of_measurement: "dBm"
+    entity_category: "diagnostic"
+    update_interval: 60s
 
 text_sensor:
   - platform: homeassistant
     entity_id: sensor.last_recorded_weigh_in
     id: last_recorded_weigh_in
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
 
 ### Calendar Sensors ###########################################################
   - platform: homeassistant
     entity_id: sensor.next_calendar_event_string
     id: next_cal_event
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
 
 ##### Weather ##################################################################
 
@@ -230,56 +222,104 @@ text_sensor:
     entity_id: weather.lincoln_ave_weather
     attribute: temperature
     id: weather_temperature_now
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: weather.lincoln_ave_weather
     id: weather_condition_now
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
 
   # Today
   - platform: homeassistant
     entity_id: sensor.today_s_condition
     id: weather_condition_0
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.today_s_high
     id: weather_temperature_0
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.today_s_low
     id: weather_low_0
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   # Tomorrow
   - platform: homeassistant
     entity_id: sensor.tomorrow_s_condition
     id: weather_condition_1
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.tomorrow_s_high
     id: weather_temperature_1
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.tomorrow_s_low
     id: weather_low_1
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   # 2 Days
   - platform: homeassistant
     entity_id: sensor.2_day_s_condition
     id: weather_condition_2
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.2_day_s_high
     id: weather_temperature_2
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.2_day_s_date
     id: weather_timestamp_2
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.2_day_s_low
     id: weather_low_2
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   # 3 Days
   - platform: homeassistant
     entity_id: sensor.3_day_s_condition
     id: weather_condition_3
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.3_day_s_high
     id: weather_temperature_3
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.3_day_s_date
     id: weather_timestamp_3
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
   - platform: homeassistant
     entity_id: sensor.3_day_s_low
     id: weather_low_3
+    on_value:
+      then:
+        - lambda: 'id(data_updated) = true;'
 
 time:
   - platform: homeassistant
@@ -306,7 +346,7 @@ display:
     reset_pin: GPIO26
     model: 7.50inV2p
     update_interval: never
-    rotation: 270
+    rotation: 90
     id: epaper_display
     lambda: |-
       auto color_white = Color(0, 0, 0, 0);
@@ -345,7 +385,7 @@ display:
       if (weight_trend_f > 0) {
         trending_icon = id(trending_up);
         asprintf(&gained_or_lost, "%s", "gained");
-      } else if (weight_trend_f > 0) {
+      } else if (weight_trend_f < 0) {
         trending_icon = id(trending_down);
         asprintf(&gained_or_lost, "%s", "lost");
       } else {
@@ -355,7 +395,7 @@ display:
       it.image(360, 223, trending_icon, ImageAlign::CENTER);
       it.printf(360, 270, id(font_light), color_black, TextAlign::CENTER, "You've %s", gained_or_lost);
       it.printf(360, 311, id(font_title), color_black, TextAlign::CENTER, "%.1f lbs", abs_trend);
-      it.print(360, 350, id(font_light), color_black, TextAlign::CENTER, "In the last 2 weeks");
+      it.print(360, 350, id(font_light), color_black, TextAlign::CENTER, "in the last 30 days");
 
       //////////////////// Weather ////////////////////
       // Current Weather

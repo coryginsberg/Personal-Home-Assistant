@@ -24,3 +24,5 @@ pyscript:
   hass_is_global: true
 
 api:
+
+import_statistics:

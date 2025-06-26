@@ -7,17 +7,9 @@
     - binary_sensor.master_bathroom_motion_sensor_motion
     to: 'on'
   conditions:
-  - condition: time
-    after: 07:30:00
-    before: '23:00:00'
-    weekday:
-    - sun
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-    - sat
+  - condition: state
+    entity_id: input_boolean.automatic_master_bathroom_lights
+    state: 'on'
   actions:
   - alias: Turn on the light
     action: light.turn_on
@@ -197,23 +189,17 @@
   - condition: state
     entity_id: input_boolean.automatic_master_bedroom_lights
     state: 'on'
-  - condition: or
-    conditions:
-    - condition: time
-      after: 07:45:00
-      before: '23:00:00'
-      weekday:
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
-    - condition: time
-      after: 09:30:00
-      before: '23:30:00'
-      weekday:
-      - sun
-      - sat
+  - condition: time
+    after: 07:00:00
+    before: '23:45:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+    - sun
   actions:
   - action: light.turn_on
     metadata: {}
@@ -406,7 +392,12 @@
       hours: 0
       minutes: 15
       seconds: 0
-  conditions: []
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: input_select.focus_states
+      state: Meeting
   actions:
   - wait_for_trigger:
     - type: no_motion
@@ -414,16 +405,10 @@
       entity_id: c343d61767f3c8c75a15e772c7bd1163
       domain: binary_sensor
       trigger: device
-  - action: tts.speak
-    metadata: {}
-    data:
-      cache: true
-      media_player_entity_id: media_player.cory_s_ecobee_smart_thermostat_premium
-      message: <angry, yelling> "The laundry is done, <pause><offended>bitch!"
-      options:
-        voice: aTbnroHRGIomiKpqAQR8
-    target:
-      entity_id: tts.elevenlabs
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 30
   - action: media_player.volume_set
     metadata: {}
     data:
@@ -435,7 +420,17 @@
     data:
       cache: true
       media_player_entity_id: media_player.master_bedroom
-      message: <angry, yelling> "The laundry is done, <pause><offended>bitch!"
+      message: <happy, yelling, quickly> "The laundry is done!"
+      options:
+        voice: aTbnroHRGIomiKpqAQR8
+    target:
+      entity_id: tts.elevenlabs
+  - action: tts.speak
+    metadata: {}
+    data:
+      cache: true
+      media_player_entity_id: media_player.cory_s_ecobee_smart_thermostat_premium
+      message: <happy, yelling, quickly> "The laundry is done!"
       options:
         voice: aTbnroHRGIomiKpqAQR8
     target:
@@ -524,21 +519,21 @@
             - switch.adaptive_lighting_sleep_mode_record_shelf
         - action: media_player.play_media
           target:
-            entity_id: media_player.corys_bedroom_2
+            entity_id: media_player.corys_bedroom
           data:
-            media_content_id: library://playlist/2
-            media_content_type: playlist
+            media_content_id: FV:2/4
+            media_content_type: favorite_item_id
           metadata:
             title: Bedtime Beats
-            thumbnail:
+            thumbnail: https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/ab/44/4d/ab444d20-0973-140e-f040-dc470241931d/U0MtTVMtV1ctQmVkdGltZV9CZWF0cy1BREFNX0lEPTE0NTMwMzM5MjYucG5n.png/400x400SC.DN01.jpeg?l=en-US
             media_class: playlist
-            children_media_class: track
+            children_media_class:
             navigateIds:
             - {}
-            - media_content_type: music_assistant
-              media_content_id: playlists
-            - media_content_type: music
-              media_content_id: library://playlist/2
+            - media_content_type: favorites
+              media_content_id: ''
+            - media_content_type: favorites_folder
+              media_content_id: object.container.playlistContainer
         - action: media_player.shuffle_set
           metadata: {}
           data:
@@ -1012,7 +1007,7 @@
     to:
   conditions:
   - condition: zone
-    entity_id: device_tracker.corys_iphone
+    entity_id: device_tracker.corys_iphone_new
     zone: zone.home
   actions:
   - choose:
@@ -1029,6 +1024,13 @@
           - 294b7f51608365609ed6149b99d21837
           - 2af29fe40e4a9999f0509b2c29138088
           - 01701caf3bd9c1d1f72fc733fdd99817
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.automatic_master_bathroom_lights
+          - input_boolean.automatic_master_bedroom_lights
     - conditions:
       - condition: state
         entity_id: input_select.focus_states
@@ -1062,16 +1064,6 @@
     - conditions:
       - condition: state
         entity_id: input_select.focus_states
-        state: Night
-      sequence:
-      - device_id: 5a929c2e71d4b3e1d762397b977c76b0
-        domain: climate
-        entity_id: b206a8d12fcaa2f0d7427e40f28db361
-        type: set_preset_mode
-        preset_mode: sleep
-    - conditions:
-      - condition: state
-        entity_id: input_select.focus_states
         state: Sleep
       sequence:
       - device_id: 5a929c2e71d4b3e1d762397b977c76b0
@@ -1079,6 +1071,13 @@
         entity_id: b206a8d12fcaa2f0d7427e40f28db361
         type: set_preset_mode
         preset_mode: sleep
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.automatic_master_bathroom_lights
+          - input_boolean.automatic_master_bedroom_lights
   mode: single
 - id: '1741282183503'
   alias: Bedroom Party Mode
@@ -1141,6 +1140,17 @@
         - 24
       target:
         device_id: 471d34284ece3a5bf659b715eb871027
+    - action: input_boolean.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.automatic_master_bedroom_lights
+        - input_boolean.automatic_master_bathroom_lights
+    - type: turn_off
+      device_id: e7a23d50c2a15346187eb70afd09e2d1
+      entity_id: 31d64cc7e0d0582f1f8f5684a56302f0
+      domain: light
     else:
     - action: light.turn_on
       metadata: {}
@@ -1184,4 +1194,48 @@
         manual_control: false
         lights:
         - light.bed_frame_light_strip
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.automatic_master_bathroom_lights
+  mode: single
+- id: '1749143638565'
+  alias: Air Circulation
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: /20
+  conditions: []
+  actions:
+  - if:
+    - condition: or
+      conditions:
+      - type: is_volatile_organic_compounds
+        condition: device
+        device_id: 5a929c2e71d4b3e1d762397b977c76b0
+        entity_id: dd72684b0b4416ba48f67bbbdc252abc
+        domain: sensor
+        above: 1000
+      - type: is_carbon_dioxide
+        condition: device
+        device_id: 5a929c2e71d4b3e1d762397b977c76b0
+        entity_id: f177bf362350d97d8e6e7ed88fe532e4
+        domain: sensor
+        above: 1000
+    then:
+    - action: climate.set_fan_mode
+      metadata: {}
+      data:
+        fan_mode: 'on'
+      target:
+        entity_id: climate.my_ecobee_2
+    else:
+    - action: climate.set_fan_mode
+      metadata: {}
+      data:
+        fan_mode: auto
+      target:
+        entity_id: climate.my_ecobee_2
   mode: single
